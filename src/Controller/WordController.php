@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -48,7 +49,7 @@ class WordController extends ApiController
         $data = [];
 
         if ($words = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($words, "json");
+            $data = $this->serializer->serialize($words, "json", [AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']]);
         }
 
         return $this->json($data);

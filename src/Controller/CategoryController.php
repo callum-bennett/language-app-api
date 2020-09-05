@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -44,7 +45,7 @@ class CategoryController extends ApiController
         $data = [];
 
         if ($categories = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($categories, "json");
+            $data = $this->serializer->serialize($categories, "json", [AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']]);
         }
 
         return $this->json($data);

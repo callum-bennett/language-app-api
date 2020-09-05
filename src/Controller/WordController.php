@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Word;
 use App\Repository\WordRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,9 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class WordController extends ApiController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
     /**
      * @var WordRepository
@@ -61,12 +65,18 @@ class WordController extends ApiController
         $name = $data->name;
         $translation = $data->translation;
         $gender = $data->gender;
+        $categoryIds = $data->categoryIds;
 
         if (!$this->repository->findOneBy(["name" => $name])) {
             $word = new Word();
             $word->setName($name);
             $word->setTranslation($translation);
             $word->setGender($gender);
+            foreach ($categoryIds as $categoryId) {
+                if ($category = $this->em->getRepository(Category::class)->find($categoryId)) {
+                    $word->addCategory($category);
+                }
+            }
             $this->em->persist($word);
             $this->em->flush();
             return $this->json(true);

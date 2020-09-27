@@ -44,7 +44,7 @@ class WordFixtures extends Fixture implements DependentFixtureInterface {
             ["niña", [CategoryFixtures::CAT_REF_FAMILY], "Girl"],
             ["hijo", [CategoryFixtures::CAT_REF_FAMILY], "Son"],
             ["hija", [CategoryFixtures::CAT_REF_FAMILY], "Daughter"],
-            ["bebe", [CategoryFixtures::CAT_REF_FAMILY], "Baby"],
+            ["bebé", [CategoryFixtures::CAT_REF_FAMILY], "Baby"],
             ["hermana", [CategoryFixtures::CAT_REF_FAMILY], "Sister"],
             ["hermano", [CategoryFixtures::CAT_REF_FAMILY], "Brother"],
             ["abuelo", [CategoryFixtures::CAT_REF_FAMILY], "Grandfather"],

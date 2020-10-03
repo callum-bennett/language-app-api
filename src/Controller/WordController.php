@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Word;
+use App\Entity\WordAttempt;
 use App\Repository\WordRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -86,5 +87,37 @@ class WordController extends ApiController
         return $this->json(false);
     }
 
+    /**
+     * @Route("/{id}/attempt", name="attempt_word", methods={"PUT"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function attempt($id, Request $request) {
 
+        $data = json_decode($request->getContent());
+
+        $correct = $data->status;
+
+        $word = $this->repository->find($id);
+        //@ todo tidy this up
+        if (!$attempt = $this->em->getRepository(WordAttempt::class)->findOneBy(['word' => $word])) {
+            $attempt = new WordAttempt();
+            $attempt->setWord($word);
+            $attempt->setWrong(0);
+            $attempt->setCorrect(0);
+        }
+        if ($correct) {
+            $existingCount = $attempt->getCorrect();
+            $attempt->setCorrect(++$existingCount);
+        } else {
+            $existingCount = $attempt->getWrong();
+            $attempt->setWrong(++$existingCount);
+        }
+        $attempt->setLastAttempt(time());
+
+        $this->em->persist($attempt);
+        $this->em->flush();
+        return $this->json(true);
+    }
 }

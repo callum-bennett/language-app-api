@@ -40,10 +40,19 @@ class CategoryFixtures extends Fixture implements FixtureInterface, ContainerAwa
 
     public function load(ObjectManager $objectManager): void
     {
-        foreach ($this->getCategories() as [$name, $imagePath, $ref]) {
-            $directory = $this->container->getParameter("publicImageDir");
-            $file = new UploadedFile($imagePath, str_replace(" ", "", $name), null, null, true);
-            $fileName = $this->fileUploader->upload($file, $directory);
+        $fixtureImageDir = realpath(__DIR__) . "/images/";
+
+        $destinationDir = $this->container->getParameter("publicImageDir");
+
+        foreach ($this->getCategories() as [$name, $fileName, $ref])
+        {
+            $originalFilePath = $fixtureImageDir.$fileName;
+            $copiedFileName = "copy-$fileName";
+            $copiedFilePath = $fixtureImageDir.$copiedFileName;
+            copy($originalFilePath, $copiedFilePath);
+
+            $file = new UploadedFile($copiedFilePath, str_replace(" ", "", $name), null, null, true);
+            $fileName = $this->fileUploader->upload($file, $destinationDir);
 
             $category = new Category();
             $category->setName($name);
@@ -59,11 +68,11 @@ class CategoryFixtures extends Fixture implements FixtureInterface, ContainerAwa
     private function getCategories(): array
     {
         return [
-            // $category = [$name, $imagePath, $ref];
-            ["Top 100 words", realpath(__DIR__) . "/images/top100.jpg", self::CAT_REF_TOP_100_WORDS],
-            ["Family", realpath(__DIR__) . "/images/people.jpg", self::CAT_REF_FAMILY],
-            ["Travel", realpath(__DIR__) . "/images/travel.jpg", self::CAT_REF_TRAVEL],
-            ["Numbers", realpath(__DIR__) . "/images/numbers.jpg", self::CAT_REF_NUMBERS],
+            // $category = [$name, $fileName, $ref];
+            ["Top 100 words", "top100.jpg", self::CAT_REF_TOP_100_WORDS],
+            ["Family", "people.jpg", self::CAT_REF_FAMILY],
+            ["Travel", "travel.jpg", self::CAT_REF_TRAVEL],
+            ["Numbers", "numbers.jpg", self::CAT_REF_NUMBERS],
         ];
     }
 }

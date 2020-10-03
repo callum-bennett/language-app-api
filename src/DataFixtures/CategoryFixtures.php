@@ -40,23 +40,22 @@ class CategoryFixtures extends Fixture implements FixtureInterface, ContainerAwa
 
     public function load(ObjectManager $objectManager): void
     {
-        $fixtureImageDir = realpath(__DIR__) . "/images/";
+        //$fixtureImageDir = realpath(__DIR__) . "/images/";
+        //$destinationDir = $this->container->getParameter("publicImageDir");
 
-        $destinationDir = $this->container->getParameter("publicImageDir");
-
-        foreach ($this->getCategories() as [$name, $fileName, $ref])
+        foreach ($this->getCategories() as [$name, $imageUrl, $ref])
         {
-            $originalFilePath = $fixtureImageDir.$fileName;
-            $copiedFileName = "copy-$fileName";
-            $copiedFilePath = $fixtureImageDir.$copiedFileName;
-            copy($originalFilePath, $copiedFilePath);
-
-            $file = new UploadedFile($copiedFilePath, str_replace(" ", "", $name), null, null, true);
-            $fileName = $this->fileUploader->upload($file, $destinationDir);
+            //$originalFilePath = $fixtureImageDir.$fileName;
+            //$copiedFileName = "copy-$fileName";
+            //$copiedFilePath = $fixtureImageDir.$copiedFileName;
+            //copy($originalFilePath, $copiedFilePath);
+            //
+            //$file = new UploadedFile($copiedFilePath, str_replace(" ", "", $name), null, null, true);
+            //$fileName = $this->fileUploader->upload($file, $destinationDir);
 
             $category = new Category();
             $category->setName($name);
-            $category->setImageUrl($fileName);
+            $category->setImageUrl($imageUrl);
 
             $objectManager->persist($category);
             $this->addReference($ref, $category);
@@ -68,11 +67,11 @@ class CategoryFixtures extends Fixture implements FixtureInterface, ContainerAwa
     private function getCategories(): array
     {
         return [
-            // $category = [$name, $fileName, $ref];
-            ["Top 100 words", "top100.jpg", self::CAT_REF_TOP_100_WORDS],
-            ["Family", "people.jpg", self::CAT_REF_FAMILY],
-            ["Travel", "travel.jpg", self::CAT_REF_TRAVEL],
-            ["Numbers", "numbers.jpg", self::CAT_REF_NUMBERS],
+            // $category = [$name, $imageUrl, $ref];
+            ["Top 100 words", "https://i.ibb.co/3rT8sq8/top100.jpg", self::CAT_REF_TOP_100_WORDS],
+            ["Family", "https://i.ibb.co/t87Pv0P/family.jpg", self::CAT_REF_FAMILY],
+            ["Travel", "https://i.ibb.co/4WHcR59/travel.jpg", self::CAT_REF_TRAVEL],
+            ["Numbers", "https://i.ibb.co/HtzjxcF/numbers.jpg", self::CAT_REF_NUMBERS],
         ];
     }
 }

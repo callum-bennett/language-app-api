@@ -18,7 +18,7 @@ class PublicController extends AbstractController
      * @param $filename
      * @return Response
      */
-    public function photo($filename): Response
+    public function image($filename): Response
     {
         return new BinaryFileResponse("images/{$filename}");
     }

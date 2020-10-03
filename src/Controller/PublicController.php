@@ -20,7 +20,6 @@ class PublicController extends AbstractController
      */
     public function photo($filename): Response
     {
-        $publicImageDir = $this->getParameter('publicImageDir');
-        return new BinaryFileResponse("{$publicImageDir}/{$filename}");
+        return new BinaryFileResponse("images/{$filename}");
     }
 }

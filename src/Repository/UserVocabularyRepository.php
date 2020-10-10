@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\WordAttempt;
+use App\Entity\UserVocabulary;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method WordAttempt|null find($id, $lockMode = null, $lockVersion = null)
- * @method WordAttempt|null findOneBy(array $criteria, array $orderBy = null)
- * @method WordAttempt[]    findAll()
- * @method WordAttempt[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method UserVocabulary|null find($id, $lockMode = null, $lockVersion = null)
+ * @method UserVocabulary|null findOneBy(array $criteria, array $orderBy = null)
+ * @method UserVocabulary[]    findAll()
+ * @method UserVocabulary[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class WordAttemptRepository extends ServiceEntityRepository
+class UserVocabularyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, WordAttempt::class);
+        parent::__construct($registry, UserVocabulary::class);
     }
 
     // /**
-    //  * @return WordAttempt[] Returns an array of WordAttempt objects
+    //  * @return UserVocabulary[] Returns an array of UserVocabulary objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class WordAttemptRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?WordAttempt
+    public function findOneBySomeField($value): ?UserVocabulary
     {
         return $this->createQueryBuilder('w')
             ->andWhere('w.exampleField = :val')

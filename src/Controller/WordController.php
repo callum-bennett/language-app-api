@@ -50,7 +50,12 @@ class WordController extends ApiController
         $data = [];
 
         if ($words = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($words, "json", [AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']]);
+            $data = $this->serializer->serialize($words, "json", [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words'],
+                    AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                        return $object->getId();
+                    }
+            ]);
         }
 
         return $this->json($data);

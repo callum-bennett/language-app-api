@@ -45,7 +45,12 @@ class CategoryController extends ApiController
         $data = [];
 
         if ($categories = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($categories, "json", [AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']]);
+            $data = $this->serializer->serialize($categories, "json", [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessons'],
+                    AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                        return $object->getId();
+                    }
+            ]);
         }
 
         return $this->json($data);

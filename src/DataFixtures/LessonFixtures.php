@@ -26,7 +26,7 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface
             $lesson->setCategory($category);
             $lesson->setSequence($sequence);
 
-            for ($i = $wordStart; $i <= $wordEnd; $i++) {
+            for ($i = $wordStart; $i < $wordEnd; $i++) {
                 $word = $this->getReference("word_$i");
                 $lesson->addWord($word);
             }

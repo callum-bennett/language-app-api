@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Word;
-use App\Entity\WordAttempt;
+use App\Entity\UserVocabulary;
 use App\Repository\WordRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -93,6 +93,29 @@ class WordController extends ApiController
     }
 
     /**
+     * @Route("/{id}/mark_seen", name="mark_seen", methods={"POST"})
+     * @param $id
+     * @return JsonResponse
+     */
+    public function mark_seen($id) {
+
+        $word = $this->repository->find($id);
+
+        if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
+            $vocabEntry = new UserVocabulary();
+            $vocabEntry->setWord($word);
+            $vocabEntry->setTimeCreated(time());
+            $this->em->persist($vocabEntry);
+            $this->em->flush();
+
+            return $this->json(true);
+        }
+
+        return $this->json(false);
+    }
+
+
+    /**
      * @Route("/{id}/attempt", name="attempt_word", methods={"PUT"})
      * @param $id
      * @param Request $request
@@ -106,11 +129,8 @@ class WordController extends ApiController
 
         $word = $this->repository->find($id);
         //@ todo tidy this up
-        if (!$attempt = $this->em->getRepository(WordAttempt::class)->findOneBy(['word' => $word])) {
-            $attempt = new WordAttempt();
-            $attempt->setWord($word);
-            $attempt->setWrong(0);
-            $attempt->setCorrect(0);
+        if (!$attempt = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
+            return false;
         }
         if ($correct) {
             $existingCount = $attempt->getCorrect();

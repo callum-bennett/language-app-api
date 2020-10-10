@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\WordAttemptRepository;
+use App\Repository\UserVocabularyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=WordAttemptRepository::class)
+ * @ORM\Entity(repositoryClass=UserVocabularyRepository::class)
  */
-class WordAttempt
+class UserVocabulary
 {
     /**
      * @ORM\Id
@@ -24,19 +24,24 @@ class WordAttempt
     private $word;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $correct;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $wrong;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $lastAttempt;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $timeCreated;
 
     public function getId(): ?int
     {
@@ -84,9 +89,21 @@ class WordAttempt
         return $this->lastAttempt;
     }
 
-    public function setLastAttempt(int $lastAttempt): self
+    public function setLastAttempt(?int $lastAttempt): self
     {
         $this->lastAttempt = $lastAttempt;
+
+        return $this;
+    }
+
+    public function getTimeCreated(): ?int
+    {
+        return $this->timeCreated;
+    }
+
+    public function setTimeCreated(int $timeCreated): self
+    {
+        $this->timeCreated = $timeCreated;
 
         return $this;
     }

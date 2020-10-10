@@ -44,7 +44,13 @@ class LessonController extends ApiController
         $data = [];
 
         if ($lessons = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($lessons, "json", [AbstractNormalizer::IGNORED_ATTRIBUTES => ['category', 'words']]);
+            $data = $this->serializer->serialize($lessons, "json", [
+                    AbstractNormalizer::CALLBACKS => [
+                            'category' => function ($innerObject) {
+                                return $innerObject->getId();
+                            }
+                    ],
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']]);
         }
 
         return $this->json($data);

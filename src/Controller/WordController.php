@@ -7,6 +7,7 @@ use App\Entity\Word;
 use App\Entity\UserVocabulary;
 use App\Repository\WordRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,10 +52,16 @@ class WordController extends ApiController
 
         if ($words = $this->repository->findAll()) {
             $data = $this->serializer->serialize($words, "json", [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words'],
-                    AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
-                        return $object->getId();
-                    }
+                    AbstractNormalizer::CALLBACKS => [
+                            'category' => function (PersistentCollection $collection) {
+                                return array_map(function($object) {
+                                    return $object->getId();
+                                }, $collection->getValues());
+                            },
+                            'lesson' => function ($object) {
+                                return $object ? $object->getId() : null;
+                            }
+                    ]
             ]);
         }
 
@@ -113,6 +120,7 @@ class WordController extends ApiController
 
         return $this->json(false);
     }
+
 
 
     /**

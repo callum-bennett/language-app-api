@@ -17,6 +17,7 @@ class WordFixtures extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $objectManager): void {
 
+        $i = 0;
         foreach ($this->getWords() as [$name, $categoryRefs, $translation]) {
 
             $word = new Word();
@@ -28,8 +29,11 @@ class WordFixtures extends Fixture implements DependentFixtureInterface {
             }
 
             $objectManager->persist($word);
-            $objectManager->flush();
+            $this->addReference("word_$i", $word);
+            $i++;
         }
+
+        $objectManager->flush();
     }
 
     private function getWords(): array {

@@ -44,6 +44,11 @@ class Word
      */
     private $category;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Lesson::class, inversedBy="words")
+     */
+    private $lesson;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
@@ -124,6 +129,18 @@ class Word
         if ($this->category->contains($category)) {
             $this->category->removeElement($category);
         }
+
+        return $this;
+    }
+
+    public function getLesson(): ?Lesson
+    {
+        return $this->lesson;
+    }
+
+    public function setLesson(?Lesson $lesson): self
+    {
+        $this->lesson = $lesson;
 
         return $this;
     }

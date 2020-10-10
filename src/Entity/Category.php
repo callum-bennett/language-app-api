@@ -35,9 +35,15 @@ class Category
      */
     private $words;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Lesson::class, mappedBy="category", orphanRemoval=true)
+     */
+    private $lessons;
+
     public function __construct()
     {
         $this->words = new ArrayCollection();
+        $this->lessons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +98,37 @@ class Category
         if ($this->words->contains($word)) {
             $this->words->removeElement($word);
             $word->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Lesson[]
+     */
+    public function getLessons(): Collection
+    {
+        return $this->lessons;
+    }
+
+    public function addLesson(Lesson $lesson): self
+    {
+        if (!$this->lessons->contains($lesson)) {
+            $this->lessons[] = $lesson;
+            $lesson->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLesson(Lesson $lesson): self
+    {
+        if ($this->lessons->contains($lesson)) {
+            $this->lessons->removeElement($lesson);
+            // set the owning side to null (unless already changed)
+            if ($lesson->getCategory() === $this) {
+                $lesson->setCategory(null);
+            }
         }
 
         return $this;

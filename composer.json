@@ -24,6 +24,8 @@
         "symfony/yaml": "5.1.*"
     },
     "require-dev": {
+        "brainmaestro/composer-git-hooks": "^2.8",
+        "friendsofphp/php-cs-fixer": "^2.16",
         "symfony/maker-bundle": "^1.21",
         "symfony/stopwatch": "^5.1",
         "symfony/web-profiler-bundle": "^5.1"
@@ -73,6 +75,11 @@
         "symfony": {
             "allow-contrib": false,
             "require": "5.1.*"
+        },
+        "hooks": {
+            "pre-commit": [
+                "php-cs-fixer fix  --config .php_cs"
+            ]
         }
     }
 }

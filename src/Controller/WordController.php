@@ -157,7 +157,8 @@ class WordController extends ApiController
         $response = $client->synthesizeSpeech($synthesisInputText, $voice, $audioConfig);
         $audioContent = $response->getAudioContent();
 
-        file_put_contents("{$word->getName()}.mp3", $audioContent);
+        $directory = $this->getParameter("publicSoundDir");
+        file_put_contents($directory . "/{$word->getName()}.mp3", $audioContent);
 
         return $this->json(false);
     }

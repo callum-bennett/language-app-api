@@ -146,7 +146,7 @@ class WordController extends ApiController
 
         $voice = (new VoiceSelectionParams())
                 ->setLanguageCode('en-US')
-                ->setSsmlGender(SsmlVoiceGender::FEMALE);
+                ->setSsmlGender(SsmlVoiceGender::MALE);
 
         $effectsProfileId = "telephony-class-application";
 

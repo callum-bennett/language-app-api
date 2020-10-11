@@ -8,6 +8,12 @@ use App\Entity\Word;
 use App\Repository\WordRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
+use Google\Cloud\TextToSpeech\V1\AudioConfig;
+use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
+use Google\Cloud\TextToSpeech\V1\SynthesisInput;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -118,6 +124,40 @@ class WordController extends ApiController
 
             return $this->json(true);
         }
+
+        return $this->json(false);
+    }
+
+    /**
+     * @Route("/{id}/listen", name="listen", methods={"GET"})
+     *
+     * @param $id
+     *
+     * @return JsonResponse
+     */
+    public function listen($id)
+    {
+        $word = $this->repository->find($id);
+
+        // instantiates a client
+        $client = new TextToSpeechClient();
+        $synthesisInputText = (new SynthesisInput())
+                ->setText($word->getName());
+
+        $voice = (new VoiceSelectionParams())
+                ->setLanguageCode('en-US')
+                ->setSsmlGender(SsmlVoiceGender::FEMALE);
+
+        $effectsProfileId = "telephony-class-application";
+
+        $audioConfig = (new AudioConfig())
+                ->setAudioEncoding(AudioEncoding::MP3)
+                ->setEffectsProfileId(array($effectsProfileId));
+
+        $response = $client->synthesizeSpeech($synthesisInputText, $voice, $audioConfig);
+        $audioContent = $response->getAudioContent();
+
+        file_put_contents('output.mp3', $audioContent);
 
         return $this->json(false);
     }

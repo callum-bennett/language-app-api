@@ -12,8 +12,8 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * Class CategoryController
- * @package App\Controller\Api
+ * Class CategoryController.
+ *
  * @Route("/api/category", name="api_category_")
  */
 class CategoryController extends ApiController
@@ -27,11 +27,9 @@ class CategoryController extends ApiController
 
     /**
      * CategoryController constructor.
-     *
-     * @param EntityManagerInterface $em
-     * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer) {
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
+    {
         $this->em = $em;
         $this->repository = $em->getRepository(Category::class);
         $this->serializer = $serializer;
@@ -45,11 +43,11 @@ class CategoryController extends ApiController
         $data = [];
 
         if ($categories = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($categories, "json", [
+            $data = $this->serializer->serialize($categories, 'json', [
                     AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessons'],
                     AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
                         return $object->getId();
-                    }
+                    },
             ]);
         }
 
@@ -58,7 +56,7 @@ class CategoryController extends ApiController
 
     /**
      * @Route("/", name="create_category", methods={"POST"})
-     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function create(Request $request)
@@ -67,12 +65,13 @@ class CategoryController extends ApiController
         $name = $data->name;
         $imageUrl = $data->imageUrl;
 
-        if (!$this->repository->findOneBy(["name" => $name])) {
+        if (!$this->repository->findOneBy(['name' => $name])) {
             $category = new Category();
             $category->setName($name);
             $category->setImageUrl($imageUrl);
             $this->em->persist($category);
             $this->em->flush();
+
             return $this->json(true);
         }
 
@@ -81,15 +80,17 @@ class CategoryController extends ApiController
 
     /**
      * @Route("/{id}/words", name="get_words", methods={"GET"})
+     *
      * @param $id
+     *
      * @return JsonResponse
      */
-    public function getWords($id) {
-
+    public function getWords($id)
+    {
         $data = [];
 
         if ($category = $this->repository->find($id)) {
-            $data = $this->serializer->serialize($category->getWords(), "json");
+            $data = $this->serializer->serialize($category->getWords(), 'json');
         }
 
         return $this->json($data);

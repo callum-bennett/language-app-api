@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\Word;
 use App\Entity\UserVocabulary;
+use App\Entity\Word;
 use App\Repository\WordRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
@@ -15,8 +15,8 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * Class WordController
- * @package App\Controller\Api
+ * Class WordController.
+ *
  * @Route("/api/word", name="api_word_")
  */
 class WordController extends ApiController
@@ -33,11 +33,9 @@ class WordController extends ApiController
 
     /**
      * WordController constructor.
-     *
-     * @param EntityManagerInterface $em
-     * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer) {
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
+    {
         $this->em = $em;
         $this->repository = $em->getRepository(Word::class);
         $this->serializer = $serializer;
@@ -51,17 +49,17 @@ class WordController extends ApiController
         $data = [];
 
         if ($words = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($words, "json", [
+            $data = $this->serializer->serialize($words, 'json', [
                     AbstractNormalizer::CALLBACKS => [
                             'category' => function (PersistentCollection $collection) {
-                                return array_map(function($object) {
+                                return array_map(function ($object) {
                                     return $object->getId();
                                 }, $collection->getValues());
                             },
                             'lesson' => function ($object) {
                                 return $object ? $object->getId() : null;
-                            }
-                    ]
+                            },
+                    ],
             ]);
         }
 
@@ -70,7 +68,7 @@ class WordController extends ApiController
 
     /**
      * @Route("/", name="create_word", methods={"POST"})
-     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function create(Request $request)
@@ -81,7 +79,7 @@ class WordController extends ApiController
         $gender = $data->gender;
         $categoryIds = $data->categoryIds;
 
-        if (!$this->repository->findOneBy(["name" => $name])) {
+        if (!$this->repository->findOneBy(['name' => $name])) {
             $word = new Word();
             $word->setName($name);
             $word->setTranslation($translation);
@@ -93,6 +91,7 @@ class WordController extends ApiController
             }
             $this->em->persist($word);
             $this->em->flush();
+
             return $this->json(true);
         }
 
@@ -101,11 +100,13 @@ class WordController extends ApiController
 
     /**
      * @Route("/{id}/mark_seen", name="mark_seen", methods={"POST"})
+     *
      * @param $id
+     *
      * @return JsonResponse
      */
-    public function mark_seen($id) {
-
+    public function mark_seen($id)
+    {
         $word = $this->repository->find($id);
 
         if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
@@ -121,16 +122,15 @@ class WordController extends ApiController
         return $this->json(false);
     }
 
-
-
     /**
      * @Route("/{id}/attempt", name="attempt_word", methods={"PUT"})
+     *
      * @param $id
-     * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function attempt($id, Request $request) {
-
+    public function attempt($id, Request $request)
+    {
         $data = json_decode($request->getContent());
 
         $correct = $data->status;
@@ -151,6 +151,7 @@ class WordController extends ApiController
 
         $this->em->persist($attempt);
         $this->em->flush();
+
         return $this->json(true);
     }
 }

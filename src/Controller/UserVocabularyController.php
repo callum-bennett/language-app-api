@@ -10,8 +10,8 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * Class UserVocabularyController
- * @package App\Controller\Api
+ * Class UserVocabularyController.
+ *
  * @Route("/api/user_vocabulary", name="api_user_vocabulary_")
  */
 class UserVocabularyController extends ApiController
@@ -28,11 +28,9 @@ class UserVocabularyController extends ApiController
 
     /**
      * UserVocabularyController constructor.
-     *
-     * @param EntityManagerInterface $em
-     * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer) {
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
+    {
         $this->em = $em;
         $this->repository = $em->getRepository(UserVocabulary::class);
         $this->serializer = $serializer;
@@ -46,11 +44,11 @@ class UserVocabularyController extends ApiController
         $data = [];
 
         if ($vocabulary = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($vocabulary, "json", [
+            $data = $this->serializer->serialize($vocabulary, 'json', [
                     AbstractNormalizer::CALLBACKS => [
                             'word' => function ($innerObject) {
                                 return $innerObject->getId();
-                            }
+                            },
                     ],
             ]);
         }

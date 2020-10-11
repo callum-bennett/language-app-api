@@ -8,15 +8,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class PublicController
- * @package App\Controller
+ * Class PublicController.
  */
 class PublicController extends AbstractController
 {
     /**
      * @Route("/image/{filename}", name="image")
+     *
      * @param $filename
-     * @return Response
      */
     public function image($filename): Response
     {

@@ -3,30 +3,30 @@
 namespace App\DataFixtures;
 
 use App\Entity\Lesson;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 class LessonFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function getDependencies() {
-        return array(
+    public function getDependencies()
+    {
+        return [
                 CategoryFixtures::class,
                 WordFixtures::class,
-        );
+        ];
     }
 
     public function load(ObjectManager $objectManager): void
     {
-        foreach ($this->getLessons() as [$categoryRef, $sequence, $wordStart, $wordEnd])
-        {
+        foreach ($this->getLessons() as [$categoryRef, $sequence, $wordStart, $wordEnd]) {
             $category = $this->getReference($categoryRef);
 
             $lesson = new Lesson();
             $lesson->setCategory($category);
             $lesson->setSequence($sequence);
 
-            for ($i = $wordStart; $i < $wordEnd; $i++) {
+            for ($i = $wordStart; $i < $wordEnd; ++$i) {
                 $word = $this->getReference("word_$i");
                 $lesson->addWord($word);
             }

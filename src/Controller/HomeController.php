@@ -6,9 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class ApiController
- *
- * @package App\Controller
+ * Class ApiController.
  */
 class HomeController extends AbstractController
 {
@@ -17,7 +15,7 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        $data = "hello world";
+        $data = "";
 
         return $this->json($data);
     }

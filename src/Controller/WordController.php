@@ -177,19 +177,19 @@ class WordController extends ApiController
 
         $word = $this->repository->find($id);
         //@ todo tidy this up
-        if (!$attempt = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
+        if (!$vocabItem = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
             return false;
         }
         if ($correct) {
-            $existingCount = $attempt->getCorrect();
-            $attempt->setCorrect(++$existingCount);
+            $existingCount = $vocabItem->getCorrect();
+            $vocabItem->setCorrect(++$existingCount);
         } else {
-            $existingCount = $attempt->getWrong();
-            $attempt->setWrong(++$existingCount);
+            $existingCount = $vocabItem->getWrong();
+            $vocabItem->setWrong(++$existingCount);
         }
-        $attempt->setLastAttempt(time());
+        $vocabItem->setLastAttempt(time());
 
-        $this->em->persist($attempt);
+        $this->em->persist($vocabItem);
         $this->em->flush();
 
         return $this->json(true);

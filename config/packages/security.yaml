@@ -18,3 +18,13 @@ security:
     main:
       anonymous: true
       lazy: true
+      guard:
+        authenticators:
+          - App\Security\TokenAuthenticator
+          - App\Security\AppAuthenticator
+        entry_point: App\Security\AppAuthenticator
+      logout:
+          path: app_logout
+
+  access_control:
+    - { path: ^/api/*, role: [ ROLE_USER ] }

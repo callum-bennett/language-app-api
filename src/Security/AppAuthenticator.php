@@ -4,10 +4,13 @@ namespace App\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -58,8 +61,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
-            // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Invalid credentials.');
         }
 
         return $user;
@@ -80,8 +82,23 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
-        return null;
+        $apiToken = bin2hex(random_bytes(64));
+
+        $user = $token->getUser();
+        $user->setApiToken($apiToken);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return new JsonResponse(true, 200, [
+                "X-AUTH-TOKEN" => $apiToken
+        ]);
     }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    {
+        return new JsonResponse(['message' => strtr($exception->getMessageKey(), $exception->getMessageData())], Response::HTTP_UNAUTHORIZED);
+    }
+
 
     protected function getLoginUrl()
     {

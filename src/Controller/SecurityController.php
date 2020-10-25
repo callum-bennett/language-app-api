@@ -2,11 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Security\AppAuthenticator;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -28,5 +35,50 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
+    }
+
+    /**
+     * @Route("/register", name="app_register")
+     */
+    public function register(Request $request,ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder,
+            AppAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler) {
+
+        $email = $request->request->get("email");
+        $rawPassword = $request->request->get("password");
+
+        try {
+            $user = new User();
+
+            $user->setEmail($email);
+            $user->setPlainPassword($rawPassword);
+
+            $violations = $validator->validate($user);
+            if ($violations->count() > 0) {
+                $errors = [];
+                foreach ($violations as $violation) {
+                    $errors[] = $violation->getMessage();
+                }
+
+                return new JsonResponse($errors, 400);
+            }
+
+            $password = $passwordEncoder->encodePassword($user, $rawPassword);
+            $user->eraseCredentials();
+            $user->setPassword($password);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
+        catch (Exception $e) {
+            return new JsonResponse("An unknown error occurred.", 400);
+        }
+
+        return $guardHandler->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $authenticator,
+                "main"
+        );
     }
 }

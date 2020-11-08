@@ -43,6 +43,8 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
         return [
             // $lesson = [$categoryRef, $sequence, $wordStart, $wordEnd];
             [CategoryFixtures::CAT_REF_FAMILY, 0, 0, 10],
+            [CategoryFixtures::CAT_REF_FAMILY, 1, 10, 20],
+            [CategoryFixtures::CAT_REF_FAMILY, 2, 20, 29],
         ];
     }
 

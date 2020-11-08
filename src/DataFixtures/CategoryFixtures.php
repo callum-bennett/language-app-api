@@ -33,7 +33,7 @@ class CategoryFixtures extends Fixture implements FixtureInterface, FixtureGroup
     {
         return [
             // $category = [$name, $imageUrl, $ref];
-            ['Top 100 words', 'https://i.ibb.co/3rT8sq8/top100.jpg', self::CAT_REF_TOP_100_WORDS],
+            //['Top 100 words', 'https://i.ibb.co/3rT8sq8/top100.jpg', self::CAT_REF_TOP_100_WORDS],
             ['Family', 'https://i.ibb.co/t87Pv0P/family.jpg', self::CAT_REF_FAMILY],
             ['Travel', 'https://i.ibb.co/4WHcR59/travel.jpg', self::CAT_REF_TRAVEL],
             ['Numbers', 'https://i.ibb.co/HtzjxcF/numbers.jpg', self::CAT_REF_NUMBERS],

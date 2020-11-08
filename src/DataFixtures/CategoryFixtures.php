@@ -4,10 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class CategoryFixtures extends Fixture implements FixtureInterface
+class CategoryFixtures extends Fixture implements FixtureInterface, FixtureGroupInterface
 {
     public const CAT_REF_FAMILY = 'family';
     public const CAT_REF_TOP_100_WORDS = 'top100words';
@@ -37,5 +38,10 @@ class CategoryFixtures extends Fixture implements FixtureInterface
             ['Travel', 'https://i.ibb.co/4WHcR59/travel.jpg', self::CAT_REF_TRAVEL],
             ['Numbers', 'https://i.ibb.co/HtzjxcF/numbers.jpg', self::CAT_REF_NUMBERS],
         ];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['production'];
     }
 }

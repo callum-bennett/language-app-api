@@ -4,10 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Lesson;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LessonFixtures extends Fixture implements DependentFixtureInterface
+class LessonFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public function getDependencies()
     {
@@ -43,5 +44,11 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface
             // $lesson = [$categoryRef, $sequence, $wordStart, $wordEnd];
             [CategoryFixtures::CAT_REF_FAMILY, 0, 0, 10],
         ];
+    }
+
+
+    public static function getGroups(): array
+    {
+        return ['production'];
     }
 }

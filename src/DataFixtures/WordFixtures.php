@@ -4,10 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Word;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class WordFixtures extends Fixture implements DependentFixtureInterface
+class WordFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public function getDependencies()
     {
@@ -49,7 +50,7 @@ class WordFixtures extends Fixture implements DependentFixtureInterface
             ['niña', [CategoryFixtures::CAT_REF_FAMILY], 'Girl'],
             ['hijo', [CategoryFixtures::CAT_REF_FAMILY], 'Son'],
             ['hija', [CategoryFixtures::CAT_REF_FAMILY], 'Daughter'],
-            ['bebé', [CategoryFixtures::CAT_REF_FAMILY], 'Baby'],
+            ['bebe', [CategoryFixtures::CAT_REF_FAMILY], 'Baby'],
             ['hermana', [CategoryFixtures::CAT_REF_FAMILY], 'Sister'],
             ['hermano', [CategoryFixtures::CAT_REF_FAMILY], 'Brother'],
             ['abuelo', [CategoryFixtures::CAT_REF_FAMILY], 'Grandfather'],
@@ -104,5 +105,10 @@ class WordFixtures extends Fixture implements DependentFixtureInterface
             ['sí', [CategoryFixtures::CAT_REF_TOP_100_WORDS], ''],
             ['su', [CategoryFixtures::CAT_REF_TOP_100_WORDS], ''],
         ];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['production'];
     }
 }

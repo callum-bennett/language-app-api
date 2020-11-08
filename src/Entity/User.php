@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -58,6 +60,16 @@ class User implements UserInterface
      * @Assert\NotBlank(message="Password is required")
      */
     private $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity=LessonProgress::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $lessonProgress;
+
+    public function __construct()
+    {
+        $this->lessonProgress = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +192,37 @@ class User implements UserInterface
     public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LessonProgress[]
+     */
+    public function getLessonProgress(): Collection
+    {
+        return $this->lessonProgress;
+    }
+
+    public function addLessonProgress(LessonProgress $lessonProgress): self
+    {
+        if (!$this->lessonProgress->contains($lessonProgress)) {
+            $this->lessonProgress[] = $lessonProgress;
+            $lessonProgress->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLessonProgress(LessonProgress $lessonProgress): self
+    {
+        if ($this->lessonProgress->contains($lessonProgress)) {
+            $this->lessonProgress->removeElement($lessonProgress);
+            // set the owning side to null (unless already changed)
+            if ($lessonProgress->getUser() === $this) {
+                $lessonProgress->setUser(null);
+            }
+        }
 
         return $this;
     }

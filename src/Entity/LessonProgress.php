@@ -23,15 +23,17 @@ class LessonProgress
      */
     private $lesson;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $user;
 
     /**
      * @ORM\Column(type="integer")
      */
     private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="lessonProgress")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -50,16 +52,18 @@ class LessonProgress
         return $this;
     }
 
-    public function getUser(): ?int
-    {
+    /**
+     * @return mixed
+     */
+    public function getUser() {
         return $this->user;
     }
 
-    public function setUser(int $user): self
-    {
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void {
         $this->user = $user;
-
-        return $this;
     }
 
     public function getStatus(): ?int

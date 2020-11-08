@@ -66,9 +66,15 @@ class User implements UserInterface
      */
     private $lessonProgress;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserVocabulary::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $userVocabularies;
+
     public function __construct()
     {
         $this->lessonProgress = new ArrayCollection();
+        $this->userVocabularies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,6 +227,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($lessonProgress->getUser() === $this) {
                 $lessonProgress->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserVocabulary[]
+     */
+    public function getUserVocabularies(): Collection
+    {
+        return $this->userVocabularies;
+    }
+
+    public function addUserVocabulary(UserVocabulary $userVocabulary): self
+    {
+        if (!$this->userVocabularies->contains($userVocabulary)) {
+            $this->userVocabularies[] = $userVocabulary;
+            $userVocabulary->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserVocabulary(UserVocabulary $userVocabulary): self
+    {
+        if ($this->userVocabularies->contains($userVocabulary)) {
+            $this->userVocabularies->removeElement($userVocabulary);
+            // set the owning side to null (unless already changed)
+            if ($userVocabulary->getUser() === $this) {
+                $userVocabulary->setUser(null);
             }
         }
 

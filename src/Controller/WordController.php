@@ -113,10 +113,12 @@ class WordController extends ApiController
      */
     public function mark_seen($id)
     {
+        $user = $this->getUser();
         $word = $this->repository->find($id);
 
         if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
             $vocabEntry = new UserVocabulary();
+            $vocabEntry->setUser($user);
             $vocabEntry->setWord($word);
             $vocabEntry->setTimeCreated(time());
             $this->em->persist($vocabEntry);
@@ -172,13 +174,14 @@ class WordController extends ApiController
      */
     public function attempt($id, Request $request)
     {
+        $user = $this->getUser();
         $data = json_decode($request->getContent());
 
         $correct = $data->status;
 
         $word = $this->repository->find($id);
         //@ todo tidy this up
-        if (!$vocabItem = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
+        if (!$vocabItem = $this->em->getRepository(UserVocabulary::class)->findOneBy(['user' => $user, 'word' => $word])) {
             return false;
         }
         if ($correct) {

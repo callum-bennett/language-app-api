@@ -45,9 +45,10 @@ class UserVocabularyController extends ApiController
 
         if ($vocabulary = $this->repository->findAll()) {
             $data = $this->serializer->serialize($vocabulary, 'json', [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
                     AbstractNormalizer::CALLBACKS => [
-                            'word' => function ($innerObject) {
-                                return $innerObject->getId();
+                            'word' => function ($o) {
+                                return $o->getId();
                             },
                     ],
             ]);

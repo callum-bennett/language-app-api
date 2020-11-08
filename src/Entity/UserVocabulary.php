@@ -43,6 +43,12 @@ class UserVocabulary
      */
     private $timeCreated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="userVocabularies")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +110,18 @@ class UserVocabulary
     public function setTimeCreated(int $timeCreated): self
     {
         $this->timeCreated = $timeCreated;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

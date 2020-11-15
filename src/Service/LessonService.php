@@ -13,9 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LessonService {
 
-    const LESSON_STARTED = 1;
-    const LESSON_COMPLETE = 2;
-    const CROSSWORD_COMPLETE = 3;
+    const LESSON_STARTED = 0;
+    const LESSON_COMPLETE = 1;
+
     /**
      * @var LessonRepository
      */
@@ -75,9 +75,11 @@ class LessonService {
             $lessonProgress->setStatus(self::LESSON_STARTED);
             $this->em->persist($lessonProgress);
             $this->em->flush();
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

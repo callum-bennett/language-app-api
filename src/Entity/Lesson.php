@@ -35,9 +35,15 @@ class Lesson
      */
     private $words;
 
+    /**
+     * @ORM\OneToMany(targetEntity=LessonComponentInstance::class, mappedBy="lesson")
+     */
+    private $lessonComponentInstances;
+
     public function __construct()
     {
         $this->words = new ArrayCollection();
+        $this->lessonComponentInstances = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,6 +100,37 @@ class Lesson
             // set the owning side to null (unless already changed)
             if ($word->getLesson() === $this) {
                 $word->setLesson(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LessonComponentInstance[]
+     */
+    public function getLessonComponentInstances(): Collection
+    {
+        return $this->lessonComponentInstances;
+    }
+
+    public function addLessonComponentInstance(LessonComponentInstance $lessonComponentInstance): self
+    {
+        if (!$this->lessonComponentInstances->contains($lessonComponentInstance)) {
+            $this->lessonComponentInstances[] = $lessonComponentInstance;
+            $lessonComponentInstance->setLesson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLessonComponentInstance(LessonComponentInstance $lessonComponentInstance): self
+    {
+        if ($this->lessonComponentInstances->contains($lessonComponentInstance)) {
+            $this->lessonComponentInstances->removeElement($lessonComponentInstance);
+            // set the owning side to null (unless already changed)
+            if ($lessonComponentInstance->getLesson() === $this) {
+                $lessonComponentInstance->setLesson(null);
             }
         }
 

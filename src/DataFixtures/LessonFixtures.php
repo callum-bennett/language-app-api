@@ -10,6 +10,10 @@ use Doctrine\Persistence\ObjectManager;
 
 class LessonFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
+    public const LESSON_REF_FAMILY_1 = "family_1";
+    public const LESSON_REF_FAMILY_2 = "family_2";
+    public const LESSON_REF_FAMILY_3 = "family_3";
+
     public function getDependencies()
     {
         return [
@@ -20,7 +24,7 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
 
     public function load(ObjectManager $objectManager): void
     {
-        foreach ($this->getLessons() as [$categoryRef, $sequence, $wordStart, $wordEnd]) {
+        foreach ($this->getLessons() as [$categoryRef, $sequence, $wordStart, $wordEnd, $ref]) {
             $category = $this->getReference($categoryRef);
 
             $lesson = new Lesson();
@@ -33,6 +37,8 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
             }
 
             $objectManager->persist($lesson);
+            $this->addReference($ref, $lesson);
+
         }
 
         $objectManager->flush();
@@ -41,10 +47,10 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
     private function getLessons(): array
     {
         return [
-            // $lesson = [$categoryRef, $sequence, $wordStart, $wordEnd];
-            [CategoryFixtures::CAT_REF_FAMILY, 0, 0, 10],
-            [CategoryFixtures::CAT_REF_FAMILY, 1, 10, 20],
-            [CategoryFixtures::CAT_REF_FAMILY, 2, 20, 29],
+            // $lesson = [$categoryRef, $sequence, $wordStart, $wordEnd, $ref];
+            [CategoryFixtures::CAT_REF_FAMILY, 0, 0, 10, self::LESSON_REF_FAMILY_1],
+            [CategoryFixtures::CAT_REF_FAMILY, 1, 10, 20, self::LESSON_REF_FAMILY_2],
+            [CategoryFixtures::CAT_REF_FAMILY, 2, 20, 29, self::LESSON_REF_FAMILY_3],
         ];
     }
 

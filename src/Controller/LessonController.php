@@ -54,8 +54,13 @@ class LessonController extends ApiController
                             'category' => function ($innerObject) {
                                 return $innerObject->getId();
                             },
+                            'lessonComponents' => function ($innerObject) {
+                                return $innerObject->getId();
+                            },
+
                     ],
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words'], ]);
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']
+            ]);
         }
 
         return $this->json($data);

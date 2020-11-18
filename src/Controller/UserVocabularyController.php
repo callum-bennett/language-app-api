@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\UserVocabulary;
 use App\Repository\UserVocabularyRepository;
+use App\Service\UserVocabularyService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -25,15 +26,20 @@ class UserVocabularyController extends ApiController
      */
     private $repository;
     private $serializer;
+    /**
+     * @var UserVocabularyService
+     */
+    private $service;
 
     /**
      * UserVocabularyController constructor.
      */
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, UserVocabularyService $service)
     {
         $this->em = $em;
         $this->repository = $em->getRepository(UserVocabulary::class);
         $this->serializer = $serializer;
+        $this->service = $service;
     }
 
     /**
@@ -41,18 +47,15 @@ class UserVocabularyController extends ApiController
      */
     public function index()
     {
-        $data = [];
-
-        if ($vocabulary = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($vocabulary, 'json', [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
-                    AbstractNormalizer::CALLBACKS => [
-                            'word' => function ($o) {
-                                return $o->getId();
-                            },
-                    ],
-            ]);
-        }
+        $vocabulary = $this->repository->findAll();
+        $data = $this->serializer->serialize($vocabulary, 'json', [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
+                AbstractNormalizer::CALLBACKS => [
+                        'word' => function ($o) {
+                            return $o->getId();
+                        },
+                ],
+        ]);
 
         return $this->json($data);
     }

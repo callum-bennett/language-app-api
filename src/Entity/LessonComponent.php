@@ -29,6 +29,11 @@ class LessonComponent
      */
     private $lessonComponentInstances;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $shortname;
+
     public function __construct()
     {
         $this->lessonComponentInstances = new ArrayCollection();
@@ -78,6 +83,18 @@ class LessonComponent
                 $lessonComponentInstance->setLessonComponent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getShortname(): ?string
+    {
+        return $this->shortname;
+    }
+
+    public function setShortname(string $shortname): self
+    {
+        $this->shortname = $shortname;
 
         return $this;
     }

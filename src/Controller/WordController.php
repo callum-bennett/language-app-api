@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\UserVocabulary;
 use App\Entity\Word;
 use App\Repository\WordRepository;
+use App\Service\UserVocabularyService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
@@ -73,6 +74,7 @@ class WordController extends ApiController
     }
 
     /**
+     * @deprecated
      * @Route("/", name="create_word", methods={"POST"})
      *
      * @return JsonResponse
@@ -109,22 +111,25 @@ class WordController extends ApiController
      *
      * @param $id
      *
+     * @param UserVocabularyService $vocabularyService
      * @return JsonResponse
      */
-    public function mark_seen($id)
+    public function mark_seen($id, UserVocabularyService $vocabularyService)
     {
         $user = $this->getUser();
         $word = $this->repository->find($id);
 
-        if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
-            $vocabEntry = new UserVocabulary();
-            $vocabEntry->setUser($user);
-            $vocabEntry->setWord($word);
-            $vocabEntry->setTimeCreated(time());
-            $this->em->persist($vocabEntry);
-            $this->em->flush();
+        if ($vocabEntry = $vocabularyService->addWord($user, $word)) {
 
-            return $this->json(true);
+            $data = $this->serializer->serialize($vocabEntry, 'json', [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
+                    AbstractNormalizer::CALLBACKS => [
+                            'word' => function ($o) {
+                                return $o->getId();
+                            },
+                    ],
+            ]);
+            return $this->json($data);
         }
 
         return $this->json(false);
@@ -170,32 +175,19 @@ class WordController extends ApiController
      *
      * @param $id
      *
+     * @param Request $request
+     * @param UserVocabularyService $vocabularyService
      * @return JsonResponse
      */
-    public function attempt($id, Request $request)
+    public function attempt($id, Request $request, UserVocabularyService $vocabularyService)
     {
         $user = $this->getUser();
         $data = json_decode($request->getContent());
-
         $correct = $data->status;
-
         $word = $this->repository->find($id);
-        //@ todo tidy this up
-        if (!$vocabItem = $this->em->getRepository(UserVocabulary::class)->findOneBy(['user' => $user, 'word' => $word])) {
-            return false;
-        }
-        if ($correct) {
-            $existingCount = $vocabItem->getCorrect();
-            $vocabItem->setCorrect(++$existingCount);
-        } else {
-            $existingCount = $vocabItem->getWrong();
-            $vocabItem->setWrong(++$existingCount);
-        }
-        $vocabItem->setLastAttempt(time());
 
-        $this->em->persist($vocabItem);
-        $this->em->flush();
+        $result = $vocabularyService->attemptWord($user, $word, $correct);
 
-        return $this->json(true);
+        return $this->json($result);
     }
 }

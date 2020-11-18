@@ -47,4 +47,23 @@ class LessonComponentInstanceRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param LessonComponentInstance $currentComponent
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findNextLessonComponent(LessonComponentInstance $currentComponent) {
+
+        $lesson = $currentComponent->getLesson();
+        $nextInSequence = $currentComponent->getSequence() + 1;
+
+        return $this->createQueryBuilder('lci')
+                ->andWhere("lci.sequence = :nextInSequence")
+                ->andWhere("lci.lesson = :lesson")
+                ->setParameter("nextInSequence", $nextInSequence)
+                ->setParameter("lesson", $lesson)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
 }

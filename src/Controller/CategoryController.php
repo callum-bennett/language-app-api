@@ -3,12 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\User;
 use App\Repository\CategoryRepository;
 use App\Service\LessonService;
-use App\Service\WordService;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -124,10 +121,11 @@ class CategoryController extends ApiController
         };
 
         $data = $this->serializer->serialize($progress, 'json', [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'user'],
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'user', 'lessonComponentInstances'],
                 AbstractNormalizer::CALLBACKS => [
                         'category' => $objectToId,
-                        'lesson' => $objectToId
+                        'lesson' => $objectToId,
+                        'activeComponent' => $objectToId
                 ],
         ]);
 

@@ -2,11 +2,12 @@
 
 namespace App\Service;
 
-
 use App\Entity\Category;
 use App\Entity\Lesson;
+use App\Entity\LessonComponentInstance;
 use App\Entity\LessonProgress;
 use App\Entity\User;
+use App\Entity\Word;
 use App\Repository\LessonProgressRepository;
 use App\Repository\LessonRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,38 +59,48 @@ class LessonService {
         return $data;
     }
 
-
     /**
      * @param User $user
      * @param Lesson $lesson
-     * @return bool
+     * @return LessonProgress|false
      */
     public function startLesson(User $user, Lesson $lesson) {
 
         $lessonProgress = $this->lessonProgressRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
 
         if (!$lessonProgress) {
+            $firstComponent = $this->em->getRepository(LessonComponentInstance::class)->findOneBy(['lesson' => $lesson, 'sequence' => 0]);
+
             $lessonProgress = new LessonProgress();
             $lessonProgress->setUser($user);
             $lessonProgress->setLesson($lesson);
+            $lessonProgress->setActiveComponent($firstComponent);
             $lessonProgress->setStatus(self::LESSON_STARTED);
             $this->em->persist($lessonProgress);
             $this->em->flush();
 
-            return true;
+            return $lessonProgress;
         }
 
         return false;
     }
 
     /**
-     * @param User $user
-     * @param Lesson $lesson
+     * @param LessonProgress $lessonProgress
+     * @param Word $word
+     * @param $correct
      * @return bool
      */
-    public function finishLesson(User $user, Lesson $lesson) {
-        $lessonProgress = $this->lessonProgressRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
-        $lessonProgress->setStatus(self::LESSON_COMPLETE);
+    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $correct) {
+
+        $key = $lessonProgress->getActiveComponent()->getLessonComponent()->getShortname();
+
+        $currentResponses = $lessonProgress->getResponses();
+        if (!array_key_exists($key, $currentResponses)) {
+            $currentResponses[$key] = [];
+        }
+        $currentResponses[$key][$word->getId()] = $correct;
+        $lessonProgress->setResponses($currentResponses);
         $this->em->persist($lessonProgress);
         $this->em->flush();
 
@@ -99,14 +110,34 @@ class LessonService {
     /**
      * @param User $user
      * @param Lesson $lesson
-     * @return bool
+     * @return mixed
      */
-    public function finishCrossword(User $user, Lesson $lesson) {
+    public function getUserLessonInstance(User $user, Lesson $lesson) {
+        return $this->em->getRepository(LessonProgress::class)->findOneBy(['lesson' => $lesson, 'user' => $user]);
+    }
+
+    /**
+     * @param User $user
+     * @param Lesson $lesson
+     * @return LessonProgress|null
+     */
+    public function advanceLesson(User $user, Lesson $lesson) {
+
+        // @todo check can advance
+
         $lessonProgress = $this->lessonProgressRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
-        $lessonProgress->setStatus(self::CROSSWORD_COMPLETE);
+        $currentComponent = $lessonProgress->getActiveComponent();
+        $nextComponent = $this->em->getRepository(LessonComponentInstance::class)->findNextLessonComponent($currentComponent);
+
+        if ($nextComponent) {
+            $lessonProgress->setActiveComponent($nextComponent);
+        } else {
+            $lessonProgress->setStatus(self::LESSON_COMPLETE);
+        }
+
         $this->em->persist($lessonProgress);
         $this->em->flush();
 
-        return true;
+        return $lessonProgress;
     }
 }

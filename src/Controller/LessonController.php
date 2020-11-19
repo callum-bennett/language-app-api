@@ -149,7 +149,10 @@ class LessonController extends ApiController
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['user'],
                 AbstractNormalizer::CALLBACKS => [
                         'lesson' => $objectToId,
-                        'activeComponent' => $objectToId,
+                        //@ todo move component data to front end
+                        'activeComponent' => function ($o) {
+                            return $o ? $o->getLessonComponent()->getId() : null;
+                        }
                 ],
 
         ]));

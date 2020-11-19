@@ -125,7 +125,9 @@ class CategoryController extends ApiController
                 AbstractNormalizer::CALLBACKS => [
                         'category' => $objectToId,
                         'lesson' => $objectToId,
-                        'activeComponent' => $objectToId
+                        'activeComponent' => function ($o) {
+                            return $o ? $o->getLessonComponent()->getId() : null;
+                        }
                 ],
         ]);
 

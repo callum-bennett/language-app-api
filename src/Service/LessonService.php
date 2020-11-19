@@ -89,20 +89,29 @@ class LessonService {
      * @param LessonProgress $lessonProgress
      * @param Word $word
      * @param $correct
+     * @param UserVocabularyService $vocabularyService
      * @return bool
      */
-    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $correct) {
+    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $correct, UserVocabularyService $vocabularyService) {
+
+        $updateVocabulary = true;
 
         $key = $lessonProgress->getActiveComponent()->getLessonComponent()->getShortname();
 
         $currentResponses = $lessonProgress->getResponses();
         if (!array_key_exists($key, $currentResponses)) {
             $currentResponses[$key] = [];
+        } else if (array_key_exists($word->getId(), $currentResponses[$key])) {
+            $updateVocabulary = false;
         }
         $currentResponses[$key][$word->getId()] = $correct;
         $lessonProgress->setResponses($currentResponses);
         $this->em->persist($lessonProgress);
         $this->em->flush();
+
+        if ($updateVocabulary) {
+            $vocabularyService->attemptWord($lessonProgress->getUser(), $word, $correct);
+        }
 
         return true;
     }

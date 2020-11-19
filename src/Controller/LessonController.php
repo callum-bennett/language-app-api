@@ -115,10 +115,7 @@ class LessonController extends ApiController
                 return false;
             }
             $word = $this->em->getRepository(Word::class)->find($wordId);
-
-            // @todo replace with event listener
-            $vocabularyService->attemptWord($lessonProgress->getUser(), $word, $correct);
-            $result = $this->service->submitAnswer($lessonProgress, $word, $correct);
+            $result = $this->service->submitAnswer($lessonProgress, $word, $correct, $vocabularyService);
 
             return $this->json($result);
 

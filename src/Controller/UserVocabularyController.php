@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class UserVocabularyController.
  *
- * @Route("/api/user_vocabulary", name="api_user_vocabulary_")
+ * @Route("/api/v1/user_vocabulary", name="api_v1_user_vocabulary_")
  */
 class UserVocabularyController extends ApiController
 {

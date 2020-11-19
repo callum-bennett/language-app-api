@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class LessonController.
  *
- * @Route("/api/lesson", name="api_lesson_")
+ * @Route("/api/v1/lesson", name="api_v1_lesson_")
  */
 class LessonController extends ApiController
 {

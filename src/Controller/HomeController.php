@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class ApiController.
+ * Class HomeController.
  */
 class HomeController extends AbstractController
 {

@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class WordController.
  *
- * @Route("/api/word", name="api_word_")
+ * @Route("/api/v1/word", name="api_v1_word_")
  */
 class WordController extends ApiController
 {

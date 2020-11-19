@@ -48,7 +48,7 @@ class UserVocabularyController extends ApiController
     public function index()
     {
         $user = $this->getUser();
-        $vocabulary = $this->repository->findAll(['user' => $user]);
+        $vocabulary = $this->repository->findBy(['user' => $user]);
         $data = $this->serializer->serialize($vocabulary, 'json', [
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
                 AbstractNormalizer::CALLBACKS => [

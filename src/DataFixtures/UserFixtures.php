@@ -19,12 +19,12 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $objectManager)
     {
-        foreach ($this->getUsers() as [$email, $firstname, $lastname, $password]) {
+        foreach ($this->getUsers() as [$username, $firstname, $lastname, $password]) {
 
             $user = new User();
             $encodedPassword = $this->passwordEncoder->encodePassword($user, $password);
 
-            $user->setEmail($email);
+            $user->setUsername($username);
             $user->setFirstname($firstname);
             $user->setLastname($lastname);
             $user->setPassword($encodedPassword);
@@ -37,9 +37,9 @@ class UserFixtures extends Fixture
 
     private function getUsers(): array {
         return [
-            // $user = [$email, $firstname, $lastname, $password];
-            ['user@test.com', "Test", "User 1", "password.test.2020"],
-            ['user2@test.com', "Test", "User 2", "password.test.2020"],
+            // $user = [$username, $firstname, $lastname, $password];
+            ['user1', "Test", "User 1", "password.test.2020"],
+            ['user2', "Test", "User 2", "password.test.2020"],
         ];
     }
 }

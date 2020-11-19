@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity("email", message="Email address already in use")
+ * @UniqueEntity("username", message="Username already in use")
  */
 class User implements UserInterface
 {
@@ -24,11 +24,15 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank(message="Email address is required")
-     * @Assert\Email(message="Email address must be a valid email address")
+     * @ORM\Column(type="string", length=180, nullable=true))
      */
     private $email;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Username is required")
+     */
+    private $username;
 
     /**
      * @ORM\Column(type="json")
@@ -260,6 +264,13 @@ class User implements UserInterface
                 $userVocabulary->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }

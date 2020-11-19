@@ -43,13 +43,13 @@ class SecurityController extends AbstractController
     public function register(Request $request,ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder,
             AppAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler) {
 
-        $email = $request->request->get("email");
+        $username = $request->request->get("username");
         $rawPassword = $request->request->get("password");
 
         try {
             $user = new User();
 
-            $user->setEmail($email);
+            $user->setUsername($username);
             $user->setPlainPassword($rawPassword);
 
             $violations = $validator->validate($user);

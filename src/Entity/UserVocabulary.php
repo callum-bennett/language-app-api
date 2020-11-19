@@ -24,14 +24,14 @@ class UserVocabulary
     private $word;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
-    private $correct;
+    private $correct = 0;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
-    private $wrong;
+    private $wrong = 0;
 
     /**
      * @ORM\Column(type="integer", nullable=true)

@@ -6,7 +6,9 @@ namespace App\Service;
 use App\Entity\Word;
 use App\Entity\User;
 use App\Entity\UserVocabulary;
+use App\Event\WordLearnedEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class UserVocabularyService {
 
@@ -15,8 +17,11 @@ class UserVocabularyService {
      */
     private $em;
 
-    public function __construct(EntityManagerInterface $em) {
+    private $dispatcher;
+
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $dispatcher) {
         $this->em = $em;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -33,6 +38,9 @@ class UserVocabularyService {
             $vocabEntry->setTimeCreated(time());
             $this->em->persist($vocabEntry);
             $this->em->flush();
+
+            $event = new WordLearnedEvent($vocabEntry);
+            $this->dispatcher->dispatch($event, $event::NAME);
         }
 
         return $vocabEntry;

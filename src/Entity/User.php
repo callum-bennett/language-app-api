@@ -75,10 +75,16 @@ class User implements UserInterface
      */
     private $userVocabularies;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserBadge::class, mappedBy="user")
+     */
+    private $userBadges;
+
     public function __construct()
     {
         $this->lessonProgress = new ArrayCollection();
         $this->userVocabularies = new ArrayCollection();
+        $this->userBadges = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -271,6 +277,37 @@ class User implements UserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserBadge[]
+     */
+    public function getUserBadges(): Collection
+    {
+        return $this->userBadges;
+    }
+
+    public function addUserBadge(UserBadge $userBadge): self
+    {
+        if (!$this->userBadges->contains($userBadge)) {
+            $this->userBadges[] = $userBadge;
+            $userBadge->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserBadge(UserBadge $userBadge): self
+    {
+        if ($this->userBadges->contains($userBadge)) {
+            $this->userBadges->removeElement($userBadge);
+            // set the owning side to null (unless already changed)
+            if ($userBadge->getUser() === $this) {
+                $userBadge->setUser(null);
+            }
+        }
 
         return $this;
     }

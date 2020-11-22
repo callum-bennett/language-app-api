@@ -6,6 +6,7 @@
 parameters:
   publicImageDir: "%kernel.project_dir%/public/images"
   publicSoundDir: "%kernel.project_dir%/public/sounds"
+  app.env: "%env(APP_ENV)%"
 
 services:
     # default configuration for services in *this* file

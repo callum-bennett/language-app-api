@@ -49,6 +49,11 @@ class Badge
      */
     private $notifier;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $iconHidden;
+
     public function __construct()
     {
         $this->userBadges = new ArrayCollection();
@@ -146,6 +151,18 @@ class Badge
     public function setNotifier(string $notifier): self
     {
         $this->notifier = $notifier;
+
+        return $this;
+    }
+
+    public function getIconHidden(): ?string
+    {
+        return $this->iconHidden;
+    }
+
+    public function setIconHidden(string $iconHidden): self
+    {
+        $this->iconHidden = $iconHidden;
 
         return $this;
     }

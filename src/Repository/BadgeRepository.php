@@ -34,9 +34,7 @@ class BadgeRepository extends ServiceEntityRepository
         $subQb = $this->createQueryBuilder('sub')
                     ->from(UserBadge::class, 'ub')
                     ->where('ub.badge = b.id')
-                    ->andWhere('ub.user = :user')
-                    ;
-
+                    ->andWhere('ub.user = :user');
 
         $qb = $this->createQueryBuilder('b', 'b.shortname');
 
@@ -47,5 +45,29 @@ class BadgeRepository extends ServiceEntityRepository
                 ->setParameter('user', $user)
                 ->getQuery()
                 ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param string $name
+     * @return int|mixed|string|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getUnobtainedBadgeForUser(User $user, string $name) {
+
+        $subQb = $this->createQueryBuilder('sub')
+                ->from(UserBadge::class, 'ub')
+                ->where('ub.badge = b.id')
+                ->andWhere('ub.user = :user');
+
+        $qb = $this->createQueryBuilder('b');
+
+        return $qb
+                ->where('b.shortname = :name')
+                ->andWhere($qb->expr()->not($qb->expr()->exists($subQb->getDQL())))
+                ->setParameter('name', $name)
+                ->setParameter('user', $user)
+                ->getQuery()
+                ->getOneOrNullResult();
     }
 }

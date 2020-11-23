@@ -42,7 +42,7 @@ class LessonProgress
 
     /**
      * @ORM\ManyToOne(targetEntity=LessonComponentInstance::class, inversedBy="lessonProgress")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $activeComponent;
 

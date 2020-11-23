@@ -7,7 +7,7 @@ use App\Repository\BadgeRepository;
 use App\Service\BadgeService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class   UserVocabularySubscriber implements EventSubscriberInterface
+class UserVocabularySubscriber implements EventSubscriberInterface
 {
     private $badgeService;
 
@@ -39,6 +39,10 @@ class   UserVocabularySubscriber implements EventSubscriberInterface
     public function checkBadges(WordLearnedEvent $event)
     {
         $user = $event->getVocabItem()->getUser();
-        $this->badgeService->checkBadgeEligibility($user, BadgeRepository::WORD);
+
+        $availableBadges = $this->badgeService->getUnobtainedBadgesForUser($user, BadgeRepository::WORD);
+        if ($availableBadges) {
+            $this->badgeService->checkWordBadgeEligibility($user, $availableBadges);
+        }
     }
 }

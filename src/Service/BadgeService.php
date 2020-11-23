@@ -4,10 +4,13 @@
 namespace App\Service;
 
 use App\Entity\Badge;
+use App\Entity\LessonComponentInstance;
+use App\Entity\LessonProgress;
 use App\Entity\User;
 use App\Entity\UserBadge;
 use App\Event\BadgeAwardedEvent;
 use App\Repository\BadgeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -68,7 +71,7 @@ class BadgeService {
      * @param $availableBadges
      * @throws \Exception
      */
-    private function checkWordBadgeEligibility(User $user, $availableBadges) {
+    public function checkWordBadgeEligibility(User $user, $availableBadges) {
         $userVocabulary = $user->getUserVocabularies();
 
         foreach ($availableBadges as $key => $badge) {
@@ -80,34 +83,17 @@ class BadgeService {
 
     /**
      * @param User $user
-     * @param $availableBadges
-     */
-    private function checkLessonBadgeEligibility(User $user, $availableBadges) {
-
-    }
-
-    /**
-     * @param User $user
-     * @param $type
+     * @param string|null $type
+     * @return ArrayCollection
      * @throws \Exception
      */
-    public function checkBadgeEligibility(User $user, $type) {
+    public function getUnobtainedBadgesForUser(User $user, string $type = null) {
 
         if (!in_array($type, $this->availableTypes())) {
             throw new \Exception("Unknown badge type");
         }
 
         $badgeRepo = $this->em->getRepository(Badge::class);
-        $availableBadges = $badgeRepo->getUnobtainedBadgesByNotifier($user, $type);
-
-        if (empty($availableBadges)) {
-            return;
-        } else if ($type === "word") {
-            $this->checkWordBadgeEligibility($user, $availableBadges);
-        } else if ($type === "lesson") {
-            $this->checkLessonBadgeEligibility($user, $availableBadges);
-        } else {
-            // do nothing
-        }
+        return new ArrayCollection($badgeRepo->getUnobtainedBadgesByNotifier($user, $type));
     }
 }

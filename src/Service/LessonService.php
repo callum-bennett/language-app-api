@@ -8,9 +8,12 @@ use App\Entity\LessonComponentInstance;
 use App\Entity\LessonProgress;
 use App\Entity\User;
 use App\Entity\Word;
+use App\Event\LessonCompletedEvent;
+use App\Event\LessonComponentCompletedEvent;
 use App\Repository\LessonProgressRepository;
 use App\Repository\LessonRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class LessonService {
 
@@ -30,10 +33,16 @@ class LessonService {
      */
     private $em;
 
-    public function __construct(EntityManagerInterface $em, LessonRepository $lessonRepository, LessonProgressRepository $lessonProgressRepository) {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    public function __construct(EntityManagerInterface $em, LessonRepository $lessonRepository, LessonProgressRepository $lessonProgressRepository, EventDispatcherInterface $dispatcher) {
         $this->em = $em;
         $this->lessonRepository = $lessonRepository;
         $this->lessonProgressRepository = $lessonProgressRepository;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -132,21 +141,52 @@ class LessonService {
      */
     public function advanceLesson(User $user, Lesson $lesson) {
 
-        // @todo check can advance
-
         $lessonProgress = $this->lessonProgressRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
         $currentComponent = $lessonProgress->getActiveComponent();
         $nextComponent = $this->em->getRepository(LessonComponentInstance::class)->findNextLessonComponent($currentComponent);
 
-        if ($nextComponent) {
-            $lessonProgress->setActiveComponent($nextComponent);
-        } else {
-            $lessonProgress->setStatus(self::LESSON_COMPLETE);
+        $this->completeLessonComponent($lessonProgress, $currentComponent, $nextComponent);
+
+        if (!$nextComponent) {
+            $this->completeLesson($lessonProgress);
         }
 
         $this->em->persist($lessonProgress);
         $this->em->flush();
 
         return $lessonProgress;
+    }
+
+    /**
+     * @param $lessonProgress
+     * @param $currentComponent
+     * @param $nextComponent
+     * @return bool
+     */
+    private function completeLessonComponent(LessonProgress $lessonProgress, LessonComponentInstance $currentComponent,
+            LessonComponentInstance $nextComponent = null) {
+
+        $lessonProgress->setActiveComponent($nextComponent);
+        $this->em->persist($lessonProgress);
+
+        $event = new LessonComponentCompletedEvent($lessonProgress->getUser(), $currentComponent, $lessonProgress);
+        $this->dispatcher->dispatch($event, $event::NAME);
+
+        return true;
+    }
+
+    /**
+     * @param LessonProgress $lessonProgress
+     * @return bool
+     */
+    private function completeLesson(LessonProgress $lessonProgress) {
+
+        $lessonProgress->setStatus(self::LESSON_COMPLETE);
+        $this->em->persist($lessonProgress);
+
+        $event = new LessonCompletedEvent($lessonProgress->getUser(), $lessonProgress);
+        $this->dispatcher->dispatch($event, $event::NAME);
+
+        return true;
     }
 }

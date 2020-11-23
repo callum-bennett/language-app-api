@@ -138,7 +138,7 @@ class LessonController extends ApiController
             $lesson = $this->repository->find($id);
             $lessonProgress = $this->service->advanceLesson($user, $lesson);
         } catch (\Exception $e) {
-            return $this->json(false, 500);
+            return $this->error($e->getMessage());
         }
 
         $objectToId = function ($o) {

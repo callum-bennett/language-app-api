@@ -15,12 +15,19 @@ class ApiController extends AbstractController
 {
     protected const STANDARD_ERROR = "An error has occurred";
 
+    private static function build($payload) {
+        return [
+                'payload' => $payload,
+                'time' => time()
+        ];
+    }
+
     /**
-     * @param $data
+     * @param $payload
      * @return JsonResponse
      */
-    protected function success($data) {
-        return new JsonResponse($data, 200);
+    protected function success($payload) {
+        return new JsonResponse(self::build($payload), 200);
     }
 
     /**

@@ -58,7 +58,7 @@ class CategoryController extends ApiController
             ]);
         }
 
-        return $this->json($data);
+        return $this->success($data);
     }
 
     /**

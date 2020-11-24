@@ -16,7 +16,7 @@ class BadgeAwardedEvent extends Event
         $this->userBadge = $userBadge;
     }
 
-    public function getVocabItem()
+    public function getUserBadge(): UserBadge
     {
         return $this->userBadge;
     }

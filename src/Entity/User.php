@@ -80,6 +80,11 @@ class User implements UserInterface
      */
     private $userBadges;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $notifications = [];
+
     public function __construct()
     {
         $this->lessonProgress = new ArrayCollection();
@@ -308,6 +313,18 @@ class User implements UserInterface
                 $userBadge->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNotifications(): ?array
+    {
+        return $this->notifications;
+    }
+
+    public function setNotifications(?array $notifications): self
+    {
+        $this->notifications = $notifications;
 
         return $this;
     }

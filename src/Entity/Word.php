@@ -35,11 +35,6 @@ class Word
     private $gender;
 
     /**
-     * @ORM\OneToOne(targetEntity=Word::class, inversedBy="oppositeGender", cascade={"persist", "remove"})
-     */
-    private $oppositeGender;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="words")
      */
     private $category;
@@ -96,18 +91,6 @@ class Word
     public function setGender(?string $gender): self
     {
         $this->gender = $gender;
-
-        return $this;
-    }
-
-    public function getOppositeGender(): ?self
-    {
-        return $this->oppositeGender;
-    }
-
-    public function setOppositeGender(?self $oppositeGender): self
-    {
-        $this->oppositeGender = $oppositeGender;
 
         return $this;
     }

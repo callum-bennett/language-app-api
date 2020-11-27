@@ -79,7 +79,7 @@ class CategoryController extends ApiController
             $this->em->persist($category);
             $this->em->flush();
 
-            return $this->json(true);
+            return $this->success(true);
         }
 
         return $this->json(false);
@@ -100,7 +100,7 @@ class CategoryController extends ApiController
             $data = $this->serializer->serialize($category->getWords(), 'json');
         }
 
-        return $this->json($data);
+        return $this->success($data);
     }
 
     /**
@@ -131,7 +131,7 @@ class CategoryController extends ApiController
                 ],
         ]);
 
-        return $this->json($data);
+        return $this->success($data);
     }
 
 }

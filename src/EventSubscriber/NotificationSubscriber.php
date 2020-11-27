@@ -45,6 +45,6 @@ class NotificationSubscriber implements EventSubscriberInterface
         $badge = $event->getUserBadge()->getBadge();
         $message = sprintf("New badge awarded! - %s", $badge->getName());
 
-        $this->notificationService->addUserNotification($user, NotificationService::BADGE, $message);
+        $this->notificationService->addNotification($user, NotificationService::BADGE, $message);
     }
 }

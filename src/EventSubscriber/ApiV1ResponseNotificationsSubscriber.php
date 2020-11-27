@@ -50,9 +50,8 @@ class ApiV1ResponseNotificationsSubscriber implements EventSubscriberInterface
         $apiPath = $classAnnotations[0]->getPath();
         $isApiV1 = substr($request->getRequestUri(), 0, strlen($apiPath)) === $apiPath;
 
-        if ($isApiV1) {
+        if ($isApiV1 && $response->isSuccessful()) {
             $user = $this->tokenStorage->getToken()->getUser();
-
             $content = json_decode($response->getContent(), true);
             $content['notifications'] = $user->getNotifications();
             $response->setContent(json_encode($content));

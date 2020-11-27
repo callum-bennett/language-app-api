@@ -70,7 +70,7 @@ class WordController extends ApiController
             ]);
         }
 
-        return $this->json($data);
+        return $this->success($data);
     }
 
     /**
@@ -100,7 +100,7 @@ class WordController extends ApiController
             $this->em->persist($word);
             $this->em->flush();
 
-            return $this->json(true);
+            return $this->success(true);
         }
 
         return $this->json(false);
@@ -129,7 +129,7 @@ class WordController extends ApiController
                             },
                     ],
             ]);
-            return $this->json($data);
+            return $this->success($data);
         }
 
         return $this->json(false);
@@ -188,6 +188,6 @@ class WordController extends ApiController
 
         $result = $vocabularyService->attemptWord($user, $word, $correct);
 
-        return $this->json($result);
+        return $this->success($result);
     }
 }

@@ -7,6 +7,7 @@ use App\Entity\Word;
 use App\Repository\LessonRepository;
 use App\Service\LessonService;
 use App\Service\UserVocabularyService;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,20 +54,21 @@ class LessonController extends ApiController
 
         if ($lessons = $this->repository->findAll()) {
             $data = $this->serializer->serialize($lessons, 'json', [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessonComponentInstances'],
                     AbstractNormalizer::CALLBACKS => [
                             'category' => function ($innerObject) {
                                 return $innerObject->getId();
                             },
-                            'lessonComponents' => function ($innerObject) {
-                                return $innerObject->getId();
-                            },
-
+                            //'lessonComponentInstances' => function (Collection $collection) {
+                            //    return $collection->map(function($item) {
+                            //        return $item->getId();
+                            //    });
+                            //},
                     ],
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words']
             ]);
         }
 
-        return $this->json($data);
+        return $this->success($data);
     }
 
     /**
@@ -85,10 +87,10 @@ class LessonController extends ApiController
 
             }
         } catch (\Exception $e) {
-            return $this->json(false, 500);
+            return $this->error(false, 500);
         }
 
-        return $this->json(true);
+        return $this->success(true);
     }
 
     /**
@@ -117,10 +119,10 @@ class LessonController extends ApiController
             $word = $this->em->getRepository(Word::class)->find($wordId);
             $result = $this->service->submitAnswer($lessonProgress, $word, $correct, $vocabularyService);
 
-            return $this->json($result);
+            return $this->success($result);
 
         } catch (\Exception $e) {
-            return $this->json($e->getMessage(), 500);
+            return $this->error($e->getMessage(), 500);
         }
     }
 
@@ -133,29 +135,32 @@ class LessonController extends ApiController
      */
     public function advance($id)
     {
-        try {
-            $user = $this->getUser();
-            $lesson = $this->repository->find($id);
-            $lessonProgress = $this->service->advanceLesson($user, $lesson);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage());
-        }
-
         $objectToId = function ($o) {
             return $o ? $o->getId() : null;
         };
 
-        return $this->json($this->serializer->serialize($lessonProgress, 'json', [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['user'],
-                AbstractNormalizer::CALLBACKS => [
-                        'lesson' => $objectToId,
-                        //@ todo move component data to front end
-                        'activeComponent' => function ($o) {
-                            return $o ? $o->getLessonComponent()->getId() : null;
-                        }
-                ],
+        try {
+            $user = $this->getUser();
+            $lesson = $this->repository->find($id);
+            $lessonProgress = $this->service->advanceLesson($user, $lesson);
 
-        ]));
+            $data = $this->serializer->serialize($lessonProgress, 'json', [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['user'],
+                    AbstractNormalizer::CALLBACKS => [
+                            'lesson' => $objectToId,
+                        //@ todo move component data to front end
+                            'activeComponent' => function ($o) {
+                                return $o ? $o->getLessonComponent()->getId() : null;
+                            }
+                    ],
+            ]);
+
+            return $this->success($data);
+
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -170,6 +175,6 @@ class LessonController extends ApiController
         $lesson = $this->repository->findBy($id);
         $data = $this->serializer->serialize($lesson->getProgress(), 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['lesson']]);
 
-        return $this->json($data);
+        return $this->success($data);
     }
 }

@@ -58,6 +58,6 @@ class LessonComponentController extends ApiController
                     ]);
         }
 
-        return $this->json($data);
+        return $this->success($data);
     }
 }

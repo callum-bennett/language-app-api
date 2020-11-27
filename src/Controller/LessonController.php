@@ -50,25 +50,25 @@ class LessonController extends ApiController
      */
     public function index()
     {
-        $data = [];
+        try {
+            $data = [];
 
-        if ($lessons = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($lessons, 'json', [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessonComponentInstances'],
-                    AbstractNormalizer::CALLBACKS => [
-                            'category' => function ($innerObject) {
-                                return $innerObject->getId();
-                            },
-                            //'lessonComponentInstances' => function (Collection $collection) {
-                            //    return $collection->map(function($item) {
-                            //        return $item->getId();
-                            //    });
-                            //},
-                    ],
-            ]);
+            if ($lessons = $this->repository->findAll()) {
+                $data = $this->serializer->serialize($lessons, 'json', [
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessonComponentInstances'],
+                        AbstractNormalizer::CALLBACKS => [
+                                'category' => function ($innerObject) {
+                                    return $innerObject->getId();
+                                },
+                        ],
+                ]);
+            }
+
+            return $this->success($data);
         }
-
-        return $this->success($data);
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -83,14 +83,13 @@ class LessonController extends ApiController
         try {
             $user = $this->getUser();
             $lesson = $this->repository->find($id);
-            if ($lessonProgress = $this->service->startLesson($user, $lesson)) {
+            $this->service->startLesson($user, $lesson);
 
-            }
+            return $this->success(true);
+
         } catch (\Exception $e) {
             return $this->error(false, 500);
         }
-
-        return $this->success(true);
     }
 
     /**
@@ -158,7 +157,6 @@ class LessonController extends ApiController
             return $this->success($data);
 
         } catch (\Exception $e) {
-            echo $e->getMessage();
             return $this->error($e->getMessage());
         }
     }
@@ -172,9 +170,14 @@ class LessonController extends ApiController
      */
     public function get_progress($id)
     {
-        $lesson = $this->repository->findBy($id);
-        $data = $this->serializer->serialize($lesson->getProgress(), 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['lesson']]);
+        try {
+            $lesson = $this->repository->findBy($id);
+            $data = $this->serializer->serialize($lesson->getProgress(), 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['lesson']]);
 
-        return $this->success($data);
+            return $this->success($data);
+        }
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 }

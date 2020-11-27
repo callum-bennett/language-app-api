@@ -49,15 +49,20 @@ class LessonComponentController extends ApiController
      */
     public function index()
     {
-        $data = [];
+        try {
+            $data = [];
 
-        if ($lessonComponents = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($lessonComponents, 'json',      [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['lessonComponentInstances']
+            if ($lessonComponents = $this->repository->findAll()) {
+                $data = $this->serializer->serialize($lessonComponents, 'json',      [
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => ['lessonComponentInstances']
 
-                    ]);
+                ]);
+            }
+
+            return $this->success($data);
         }
-
-        return $this->success($data);
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 }

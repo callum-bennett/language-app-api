@@ -53,24 +53,29 @@ class WordController extends ApiController
      */
     public function index()
     {
-        $data = [];
+        try {
+            $data = [];
 
-        if ($words = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($words, 'json', [
-                    AbstractNormalizer::CALLBACKS => [
-                            'category' => function (PersistentCollection $collection) {
-                                return array_map(function ($object) {
-                                    return $object->getId();
-                                }, $collection->getValues());
-                            },
-                            'lesson' => function ($object) {
-                                return $object ? $object->getId() : null;
-                            },
-                    ],
-            ]);
+            if ($words = $this->repository->findAll()) {
+                $data = $this->serializer->serialize($words, 'json', [
+                        AbstractNormalizer::CALLBACKS => [
+                                'category' => function (PersistentCollection $collection) {
+                                    return array_map(function ($object) {
+                                        return $object->getId();
+                                    }, $collection->getValues());
+                                },
+                                'lesson' => function ($object) {
+                                    return $object ? $object->getId() : null;
+                                },
+                        ],
+                ]);
+            }
+
+            return $this->success($data);
         }
-
-        return $this->success($data);
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -81,6 +86,8 @@ class WordController extends ApiController
      */
     public function create(Request $request)
     {
+        //@ todo
+
         $data = json_decode($request->getContent());
         $name = $data->name;
         $translation = $data->translation;
@@ -116,23 +123,28 @@ class WordController extends ApiController
      */
     public function mark_seen($id, UserVocabularyService $vocabularyService)
     {
-        $user = $this->getUser();
-        $word = $this->repository->find($id);
+        try {
+            $user = $this->getUser();
+            $word = $this->repository->find($id);
 
-        if ($vocabEntry = $vocabularyService->addWord($user, $word)) {
+            if ($vocabEntry = $vocabularyService->addWord($user, $word)) {
 
-            $data = $this->serializer->serialize($vocabEntry, 'json', [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
-                    AbstractNormalizer::CALLBACKS => [
-                            'word' => function ($o) {
-                                return $o->getId();
-                            },
-                    ],
-            ]);
-            return $this->success($data);
+                $data = $this->serializer->serialize($vocabEntry, 'json', [
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
+                        AbstractNormalizer::CALLBACKS => [
+                                'word' => function ($o) {
+                                    return $o->getId();
+                                },
+                        ],
+                ]);
+                return $this->success($data);
+            }
+
+            return $this->success(false);
         }
-
-        return $this->json(false);
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -144,6 +156,7 @@ class WordController extends ApiController
      */
     public function listen($id)
     {
+        //@ todo
         $word = $this->repository->find($id);
 
         // instantiates a client
@@ -181,13 +194,18 @@ class WordController extends ApiController
      */
     public function attempt($id, Request $request, UserVocabularyService $vocabularyService)
     {
-        $user = $this->getUser();
-        $data = json_decode($request->getContent());
-        $correct = $data->status;
-        $word = $this->repository->find($id);
+        try {
+            $user = $this->getUser();
+            $data = json_decode($request->getContent());
+            $correct = $data->status;
+            $word = $this->repository->find($id);
 
-        $result = $vocabularyService->attemptWord($user, $word, $correct);
+            $result = $vocabularyService->attemptWord($user, $word, $correct);
 
-        return $this->success($result);
+            return $this->success($result);
+        }
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 }

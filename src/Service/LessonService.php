@@ -71,7 +71,7 @@ class LessonService {
     /**
      * @param User $user
      * @param Lesson $lesson
-     * @return LessonProgress|false
+     * @return LessonProgress
      */
     public function startLesson(User $user, Lesson $lesson) {
 
@@ -87,11 +87,9 @@ class LessonService {
             $lessonProgress->setStatus(self::LESSON_STARTED);
             $this->em->persist($lessonProgress);
             $this->em->flush();
-
-            return $lessonProgress;
         }
 
-        return false;
+        return $lessonProgress;
     }
 
     /**

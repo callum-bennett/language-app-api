@@ -47,18 +47,22 @@ class CategoryController extends ApiController
      */
     public function index()
     {
-        $data = [];
+        try {
+            $data = [];
 
-        if ($categories = $this->repository->findAll()) {
-            $data = $this->serializer->serialize($categories, 'json', [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessons'],
-                    AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
-                        return $object->getId();
-                    },
-            ]);
+            if ($categories = $this->repository->findAll()) {
+                $data = $this->serializer->serialize($categories, 'json', [
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessons'],
+                        AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                            return $object->getId();
+                        },
+                ]);
+            }
+            return $this->success($data);
         }
-
-        return $this->success($data);
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -68,21 +72,29 @@ class CategoryController extends ApiController
      */
     public function create(Request $request)
     {
-        $data = json_decode($request->getContent());
-        $name = $data->name;
-        $imageUrl = $data->imageUrl;
+        try {
+            $data = json_decode($request->getContent());
+            $name = $data->name;
+            $imageUrl = $data->imageUrl;
 
-        if (!$this->repository->findOneBy(['name' => $name])) {
-            $category = new Category();
-            $category->setName($name);
-            $category->setImageUrl($imageUrl);
-            $this->em->persist($category);
-            $this->em->flush();
+            if (!$this->repository->findOneBy(['name' => $name])) {
+                $category = new Category();
+                $category->setName($name);
+                $category->setImageUrl($imageUrl);
+                $this->em->persist($category);
+                $this->em->flush();
 
-            return $this->success(true);
+                return $this->success(true);
+            }
+
+            return $this->success(false);
+
+        }
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
         }
 
-        return $this->json(false);
+
     }
 
     /**
@@ -94,13 +106,18 @@ class CategoryController extends ApiController
      */
     public function getWords($id)
     {
-        $data = [];
+        try {
+            $data = [];
 
-        if ($category = $this->repository->find($id)) {
-            $data = $this->serializer->serialize($category->getWords(), 'json');
+            if ($category = $this->repository->find($id)) {
+                $data = $this->serializer->serialize($category->getWords(), 'json');
+            }
+
+            return $this->success($data);
         }
-
-        return $this->success($data);
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     /**
@@ -112,26 +129,30 @@ class CategoryController extends ApiController
      */
     public function getProgress($id)
     {
-        $user = $this->getUser();
-        $category = $this->repository->find($id);
-        $progress = $this->lessonService->getUserCategoryProgress($user, $category);
+        try {
+            $user = $this->getUser();
+            $category = $this->repository->find($id);
+            $progress = $this->lessonService->getUserCategoryProgress($user, $category);
 
-        $objectToId = function ($o) {
-            return $o ? $o->getId() : null;
-        };
+            $objectToId = function ($o) {
+                return $o ? $o->getId() : null;
+            };
 
-        $data = $this->serializer->serialize($progress, 'json', [
-                AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'user', 'lessonComponentInstances'],
-                AbstractNormalizer::CALLBACKS => [
-                        'category' => $objectToId,
-                        'lesson' => $objectToId,
-                        'activeComponent' => function ($o) {
-                            return $o ? $o->getLessonComponent()->getId() : null;
-                        }
-                ],
-        ]);
+            $data = $this->serializer->serialize($progress, 'json', [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'user', 'lessonComponentInstances'],
+                    AbstractNormalizer::CALLBACKS => [
+                            'category' => $objectToId,
+                            'lesson' => $objectToId,
+                            'activeComponent' => function ($o) {
+                                return $o ? $o->getLessonComponent()->getId() : null;
+                            }
+                    ],
+            ]);
 
-        return $this->success($data);
+            return $this->success($data);
+        }
+        catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
-
 }

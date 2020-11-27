@@ -5,8 +5,8 @@ namespace App\Service;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-class NotificationService {
-
+class NotificationService
+{
     public const BADGE = "badge";
 
     /**
@@ -14,7 +14,8 @@ class NotificationService {
      */
     private $em;
 
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em)
+    {
         $this->em = $em;
     }
 
@@ -23,8 +24,8 @@ class NotificationService {
      * @param $type
      * @param $message
      */
-    public function addNotification(User $user, string $type, string $message) {
-
+    public function addNotification(User $user, string $type, string $message)
+    {
         $currentNotifications = $user->getNotifications();
 
         if (is_null($currentNotifications)) {
@@ -46,8 +47,8 @@ class NotificationService {
      * @param User $user
      * @param string $type
      */
-    public function clearNotificationsOfType(User $user, string $type) {
-
+    public function clearNotificationsOfType(User $user, string $type)
+    {
         $currentNotifications = $user->getNotifications();
         unset($currentNotifications[$type]);
 

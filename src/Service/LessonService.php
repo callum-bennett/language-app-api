@@ -15,8 +15,8 @@ use App\Repository\LessonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class LessonService {
-
+class LessonService
+{
     const LESSON_STARTED = 0;
     const LESSON_COMPLETE = 1;
 
@@ -38,7 +38,8 @@ class LessonService {
      */
     private $dispatcher;
 
-    public function __construct(EntityManagerInterface $em, LessonRepository $lessonRepository, LessonProgressRepository $lessonProgressRepository, EventDispatcherInterface $dispatcher) {
+    public function __construct(EntityManagerInterface $em, LessonRepository $lessonRepository, LessonProgressRepository $lessonProgressRepository, EventDispatcherInterface $dispatcher)
+    {
         $this->em = $em;
         $this->lessonRepository = $lessonRepository;
         $this->lessonProgressRepository = $lessonProgressRepository;
@@ -50,8 +51,8 @@ class LessonService {
      * @param Category $category
      * @return array
      */
-    public function getUserCategoryProgress(User $user, Category $category) {
-
+    public function getUserCategoryProgress(User $user, Category $category)
+    {
         $lessons = $this->lessonRepository->findBy(['category' => $category]);
         $data = [
                 'lessons' => $lessons,
@@ -73,8 +74,8 @@ class LessonService {
      * @param Lesson $lesson
      * @return LessonProgress
      */
-    public function startLesson(User $user, Lesson $lesson) {
-
+    public function startLesson(User $user, Lesson $lesson)
+    {
         $lessonProgress = $this->lessonProgressRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
 
         if (!$lessonProgress) {
@@ -99,8 +100,8 @@ class LessonService {
      * @param UserVocabularyService $vocabularyService
      * @return bool
      */
-    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $correct, UserVocabularyService $vocabularyService) {
-
+    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $correct, UserVocabularyService $vocabularyService)
+    {
         $updateVocabulary = true;
 
         $key = $lessonProgress->getActiveComponent()->getLessonComponent()->getShortname();
@@ -108,7 +109,7 @@ class LessonService {
         $currentResponses = $lessonProgress->getResponses();
         if (!array_key_exists($key, $currentResponses)) {
             $currentResponses[$key] = [];
-        } else if (array_key_exists($word->getId(), $currentResponses[$key])) {
+        } elseif (array_key_exists($word->getId(), $currentResponses[$key])) {
             $updateVocabulary = false;
         }
         $currentResponses[$key][$word->getId()] = $correct;
@@ -128,7 +129,8 @@ class LessonService {
      * @param Lesson $lesson
      * @return mixed
      */
-    public function getUserLessonInstance(User $user, Lesson $lesson) {
+    public function getUserLessonInstance(User $user, Lesson $lesson)
+    {
         return $this->em->getRepository(LessonProgress::class)->findOneBy(['lesson' => $lesson, 'user' => $user]);
     }
 
@@ -137,8 +139,8 @@ class LessonService {
      * @param Lesson $lesson
      * @return LessonProgress|null
      */
-    public function advanceLesson(User $user, Lesson $lesson) {
-
+    public function advanceLesson(User $user, Lesson $lesson)
+    {
         $lessonProgress = $this->lessonProgressRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
         $currentComponent = $lessonProgress->getActiveComponent();
         $nextComponent = $this->em->getRepository(LessonComponentInstance::class)->findNextLessonComponent($currentComponent);
@@ -161,9 +163,11 @@ class LessonService {
      * @param $nextComponent
      * @return bool
      */
-    private function completeLessonComponent(LessonProgress $lessonProgress, LessonComponentInstance $currentComponent,
-            LessonComponentInstance $nextComponent = null) {
-
+    private function completeLessonComponent(
+        LessonProgress $lessonProgress,
+        LessonComponentInstance $currentComponent,
+        LessonComponentInstance $nextComponent = null
+    ) {
         $lessonProgress->setActiveComponent($nextComponent);
         $this->em->persist($lessonProgress);
 
@@ -177,8 +181,8 @@ class LessonService {
      * @param LessonProgress $lessonProgress
      * @return bool
      */
-    private function completeLesson(LessonProgress $lessonProgress) {
-
+    private function completeLesson(LessonProgress $lessonProgress)
+    {
         $lessonProgress->setStatus(self::LESSON_COMPLETE);
         $this->em->persist($lessonProgress);
 

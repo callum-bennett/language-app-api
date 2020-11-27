@@ -38,7 +38,6 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
 
             $objectManager->persist($lesson);
             $this->addReference($ref, $lesson);
-
         }
 
         $objectManager->flush();

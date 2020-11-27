@@ -14,7 +14,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ApiV1ResponseNotificationsSubscriber implements EventSubscriberInterface
 {
-
     private $annotationReader;
 
     private $tokenStorage;
@@ -24,7 +23,8 @@ class ApiV1ResponseNotificationsSubscriber implements EventSubscriberInterface
      * @param Reader $annotationReader
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(EntityManagerInterface $em, Reader $annotationReader, TokenStorageInterface $tokenStorage) {
+    public function __construct(EntityManagerInterface $em, Reader $annotationReader, TokenStorageInterface $tokenStorage)
+    {
         $this->em = $em;
         $this->annotationReader = $annotationReader;
         $this->tokenStorage = $tokenStorage;

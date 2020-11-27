@@ -71,8 +71,7 @@ class WordController extends ApiController
             }
 
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }
@@ -127,7 +126,6 @@ class WordController extends ApiController
             $word = $this->repository->find($id);
 
             if ($vocabEntry = $vocabularyService->addWord($user, $word)) {
-
                 $data = $this->serializer->serialize($vocabEntry, 'json', [
                         AbstractNormalizer::IGNORED_ATTRIBUTES => ["user"],
                         AbstractNormalizer::CALLBACKS => [
@@ -140,8 +138,7 @@ class WordController extends ApiController
             }
 
             return $this->success(false);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }
@@ -202,8 +199,7 @@ class WordController extends ApiController
             $result = $vocabularyService->attemptWord($user, $word, $correct);
 
             return $this->success($result);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }

@@ -24,7 +24,6 @@ class LessonComponentFixtures extends Fixture implements FixtureGroupInterface
     public function load(ObjectManager $objectManager): void
     {
         foreach ($this->getLessonComponents() as [$name, $shortname, $ref]) {
-
             $lessonComponent = new LessonComponent();
             $lessonComponent->setName($name);
             $lessonComponent->setShortname($shortname);

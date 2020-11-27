@@ -49,8 +49,7 @@ class BadgeController extends ApiController
                     AbstractNormalizer::IGNORED_ATTRIBUTES => ['userBadges'],
             ]);
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }

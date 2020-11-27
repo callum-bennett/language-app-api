@@ -52,8 +52,8 @@ class LessonComponentInstanceRepository extends ServiceEntityRepository
      * @param LessonComponentInstance $currentComponent
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findNextLessonComponent(LessonComponentInstance $currentComponent) {
-
+    public function findNextLessonComponent(LessonComponentInstance $currentComponent)
+    {
         $lesson = $currentComponent->getLesson();
         $nextInSequence = $currentComponent->getSequence() + 1;
 

@@ -66,14 +66,16 @@ class LessonProgress
     /**
      * @return mixed
      */
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 
     /**
      * @param mixed $user
      */
-    public function setUser($user): void {
+    public function setUser($user): void
+    {
         $this->user = $user;
     }
 

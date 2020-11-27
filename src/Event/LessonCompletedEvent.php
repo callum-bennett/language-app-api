@@ -19,11 +19,13 @@ class LessonCompletedEvent extends Event
         $this->lessonProgress = $lessonProgress;
     }
 
-    public function getUser(): User {
+    public function getUser(): User
+    {
         return $this->user;
     }
 
-    public function getLessonProgress(): LessonProgress {
+    public function getLessonProgress(): LessonProgress
+    {
         return $this->lessonProgress;
     }
 }

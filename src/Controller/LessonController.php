@@ -64,8 +64,7 @@ class LessonController extends ApiController
             }
 
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }
@@ -85,7 +84,6 @@ class LessonController extends ApiController
             $this->service->startLesson($user, $lesson);
 
             return $this->success(true);
-
         } catch (\Exception $e) {
             return $this->error(false, 500);
         }
@@ -100,8 +98,8 @@ class LessonController extends ApiController
      * @param UserVocabularyService $vocabularyService
      * @return JsonResponse
      */
-    public function submitAnswer($id, Request $request, UserVocabularyService $vocabularyService) {
-
+    public function submitAnswer($id, Request $request, UserVocabularyService $vocabularyService)
+    {
         try {
             $data = json_decode($request->getContent());
             $wordId = $data->wordId;
@@ -118,7 +116,6 @@ class LessonController extends ApiController
             $result = $this->service->submitAnswer($lessonProgress, $word, $correct, $vocabularyService);
 
             return $this->success($result);
-
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), 500);
         }
@@ -154,7 +151,6 @@ class LessonController extends ApiController
             ]);
 
             return $this->success($data);
-
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
@@ -174,8 +170,7 @@ class LessonController extends ApiController
             $data = $this->serializer->serialize($lesson->getProgress(), 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['lesson']]);
 
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }

@@ -63,8 +63,7 @@ class CategoryController extends ApiController
                 ]);
             }
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }
@@ -93,13 +92,9 @@ class CategoryController extends ApiController
             }
 
             return $this->success(false);
-
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
-
-
     }
 
     /**
@@ -119,8 +114,7 @@ class CategoryController extends ApiController
             }
 
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }
@@ -155,8 +149,7 @@ class CategoryController extends ApiController
             ]);
 
             return $this->success($data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
     }

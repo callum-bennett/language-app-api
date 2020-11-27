@@ -11,7 +11,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInterface
 {
-
     public function load(ObjectManager $objectManager): void
     {
         foreach ($this->getBadges() as [$name, $description, $shortname, $icon, $iconHidden, $notifier]) {

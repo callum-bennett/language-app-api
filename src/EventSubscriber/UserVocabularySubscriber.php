@@ -16,7 +16,8 @@ class UserVocabularySubscriber implements EventSubscriberInterface
      *
      * @param BadgeService $badgeService
      */
-    public function __construct(BadgeService $badgeService) {
+    public function __construct(BadgeService $badgeService)
+    {
         $this->badgeService = $badgeService;
     }
 

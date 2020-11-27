@@ -2,15 +2,15 @@
 
 namespace App\Service;
 
-
-use App\Entity\Word;
 use App\Entity\User;
 use App\Entity\UserVocabulary;
+use App\Entity\Word;
 use App\Event\WordLearnedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class UserVocabularyService {
+class UserVocabularyService
+{
 
     /**
      * @var EntityManagerInterface
@@ -19,7 +19,8 @@ class UserVocabularyService {
 
     private $dispatcher;
 
-    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $dispatcher) {
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $dispatcher)
+    {
         $this->em = $em;
         $this->dispatcher = $dispatcher;
     }
@@ -29,8 +30,8 @@ class UserVocabularyService {
      * @param Word $word
      * @return UserVocabulary
      */
-    public function addWord(User $user, Word $word) {
-
+    public function addWord(User $user, Word $word)
+    {
         if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
             $vocabEntry = new UserVocabulary();
             $vocabEntry->setUser($user);
@@ -52,7 +53,8 @@ class UserVocabularyService {
      * @param $correct
      * @return bool
      */
-    public function attemptWord(User $user, Word $word, $correct) {
+    public function attemptWord(User $user, Word $word, $correct)
+    {
         if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['user' => $user, 'word' => $word])) {
             // @ todo throw exception
             return false;

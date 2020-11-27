@@ -51,9 +51,13 @@ class SecurityController extends AbstractController
      * @param GuardAuthenticatorHandler $guardHandler
      * @return JsonResponse|Response|null
      */
-    public function register(Request $request,ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder,
-            AppAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler) {
-
+    public function register(
+        Request $request,
+        ValidatorInterface $validator,
+        UserPasswordEncoderInterface $passwordEncoder,
+        AppAuthenticator $authenticator,
+        GuardAuthenticatorHandler $guardHandler
+    ) {
         $username = $request->request->get("username");
         $rawPassword = $request->request->get("password");
 
@@ -80,16 +84,15 @@ class SecurityController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse("An unknown error occurred.", 400);
         }
 
         return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                "main"
+            $user,
+            $request,
+            $authenticator,
+            "main"
         );
     }
 }

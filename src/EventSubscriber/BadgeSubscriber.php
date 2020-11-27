@@ -21,7 +21,8 @@ class BadgeSubscriber implements EventSubscriberInterface
      * @param BadgeService $badgeService
      * @param EntityManagerInterface $em
      */
-    public function __construct(BadgeService $badgeService, EntityManagerInterface $em) {
+    public function __construct(BadgeService $badgeService, EntityManagerInterface $em)
+    {
         $this->badgeService = $badgeService;
         $this->em = $em;
     }
@@ -65,11 +66,10 @@ class BadgeSubscriber implements EventSubscriberInterface
         $lessonProgress = $event->getLessonProgress();
 
         if ($badge = $this->em->getRepository(Badge::class)->getUnobtainedBadgeForUser($user, "no_mistakes")) {
-
             $key = $componentInstance->getLessonComponent()->getShortname();
 
             if ($key !== "slides") {
-                $incorrectAnswers = array_filter($lessonProgress->getResponses()[$key], function($item) {
+                $incorrectAnswers = array_filter($lessonProgress->getResponses()[$key], function ($item) {
                     return !$item;
                 });
 

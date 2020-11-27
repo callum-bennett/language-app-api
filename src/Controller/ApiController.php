@@ -19,7 +19,8 @@ class ApiController extends AbstractController
      * @param $payload
      * @return array
      */
-    private static function build($payload) {
+    private static function build($payload)
+    {
         return [
                 'payload' => $payload,
                 'time' => time()
@@ -30,7 +31,8 @@ class ApiController extends AbstractController
      * @param $payload
      * @return JsonResponse
      */
-    protected function success($payload) {
+    protected function success($payload)
+    {
         return new JsonResponse(self::build($payload), 200);
     }
 
@@ -39,7 +41,8 @@ class ApiController extends AbstractController
      * @param int $errorCode
      * @return JsonResponse
      */
-    protected function error($message = self::STANDARD_ERROR, $errorCode = 500) {
+    protected function error($message = self::STANDARD_ERROR, $errorCode = 500)
+    {
         if ($this->getParameter("app.env") === "prod") {
             $message = self::STANDARD_ERROR;
         }

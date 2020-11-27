@@ -19,7 +19,8 @@ class NotificationSubscriber implements EventSubscriberInterface
      * @param NotificationService $notificationService
      * @param EntityManagerInterface $em
      */
-    public function __construct(NotificationService $notificationService, EntityManagerInterface $em) {
+    public function __construct(NotificationService $notificationService, EntityManagerInterface $em)
+    {
         $this->notificationService = $notificationService;
         $this->em = $em;
     }
@@ -39,8 +40,8 @@ class NotificationSubscriber implements EventSubscriberInterface
     /**
      * @param BadgeAwardedEvent $event
      */
-    public function addBadgeAwardedNotification(BadgeAwardedEvent $event) {
-
+    public function addBadgeAwardedNotification(BadgeAwardedEvent $event)
+    {
         $user = $event->getUserBadge()->getUser();
         $badge = $event->getUserBadge()->getBadge();
         $message = sprintf("New badge awarded! - %s", $badge->getName());

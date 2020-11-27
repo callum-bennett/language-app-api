@@ -29,8 +29,8 @@ class BadgeRepository extends ServiceEntityRepository
      * @param string $notifier
      * @return int|mixed|string
      */
-    public function getUnobtainedBadgesByNotifier(User $user, string $notifier) {
-
+    public function getUnobtainedBadgesByNotifier(User $user, string $notifier)
+    {
         $subQb = $this->createQueryBuilder('sub')
                     ->from(UserBadge::class, 'ub')
                     ->where('ub.badge = b.id')
@@ -53,8 +53,8 @@ class BadgeRepository extends ServiceEntityRepository
      * @return int|mixed|string|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getUnobtainedBadgeForUser(User $user, string $name) {
-
+    public function getUnobtainedBadgeForUser(User $user, string $name)
+    {
         $subQb = $this->createQueryBuilder('sub')
                 ->from(UserBadge::class, 'ub')
                 ->where('ub.badge = b.id')

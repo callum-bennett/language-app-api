@@ -16,6 +16,7 @@ class PublicController extends AbstractController
      * @Route("/image/{filename}", name="image")
      *
      * @param $filename
+     * @return Response
      */
     public function image($filename): Response
     {

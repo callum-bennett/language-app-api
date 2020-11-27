@@ -7,7 +7,6 @@ use App\Entity\Word;
 use App\Repository\LessonRepository;
 use App\Service\LessonService;
 use App\Service\UserVocabularyService;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

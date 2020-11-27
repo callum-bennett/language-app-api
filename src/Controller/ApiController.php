@@ -15,6 +15,10 @@ class ApiController extends AbstractController
 {
     protected const STANDARD_ERROR = "An error has occurred";
 
+    /**
+     * @param $payload
+     * @return array
+     */
     private static function build($payload) {
         return [
                 'payload' => $payload,

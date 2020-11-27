@@ -33,6 +33,10 @@ class UserVocabularyController extends ApiController
 
     /**
      * UserVocabularyController constructor.
+     *
+     * @param EntityManagerInterface $em
+     * @param SerializerInterface $serializer
+     * @param UserVocabularyService $service
      */
     public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, UserVocabularyService $service)
     {

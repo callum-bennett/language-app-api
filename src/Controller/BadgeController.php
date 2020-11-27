@@ -24,9 +24,11 @@ class BadgeController extends ApiController
     private $repository;
     private $serializer;
 
-
     /**
      * BadgeController constructor.
+     *
+     * @param EntityManagerInterface $em
+     * @param SerializerInterface $serializer
      */
     public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
     {

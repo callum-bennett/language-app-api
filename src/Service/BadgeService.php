@@ -4,14 +4,13 @@
 namespace App\Service;
 
 use App\Entity\Badge;
-use App\Entity\LessonComponentInstance;
-use App\Entity\LessonProgress;
 use App\Entity\User;
 use App\Entity\UserBadge;
 use App\Event\BadgeAwardedEvent;
 use App\Repository\BadgeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BadgeService {
@@ -45,12 +44,12 @@ class BadgeService {
      * @param User $user
      * @param Badge $badge
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function awardBadge(User $user, Badge $badge) {
 
         if ($user->getUserBadges()->contains($badge)) {
-            throw new \Exception("User already has badge");
+            throw new Exception("User already has badge");
         }
 
         $userBadge = new UserBadge();
@@ -69,7 +68,7 @@ class BadgeService {
     /**
      * @param User $user
      * @param $availableBadges
-     * @throws \Exception
+     * @throws Exception
      */
     public function checkWordBadgeEligibility(User $user, $availableBadges) {
         $userVocabulary = $user->getUserVocabularies();
@@ -85,12 +84,12 @@ class BadgeService {
      * @param User $user
      * @param string|null $type
      * @return ArrayCollection
-     * @throws \Exception
+     * @throws Exception
      */
     public function getUnobtainedBadgesForUser(User $user, string $type = null) {
 
         if (!in_array($type, $this->availableTypes())) {
-            throw new \Exception("Unknown badge type");
+            throw new Exception("Unknown badge type");
         }
 
         $badgeRepo = $this->em->getRepository(Badge::class);

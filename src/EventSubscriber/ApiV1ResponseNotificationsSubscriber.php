@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -38,7 +39,7 @@ class ApiV1ResponseNotificationsSubscriber implements EventSubscriberInterface
 
     /**
      * @param ResponseEvent $event
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function onKernelResponse(ResponseEvent $event)
     {

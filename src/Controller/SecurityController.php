@@ -15,6 +15,11 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Class SecurityController
+ *
+ * @package App\Controller
+ */
 class SecurityController extends AbstractController
 {
     /**
@@ -39,6 +44,12 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/register", name="app_register")
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param AppAuthenticator $authenticator
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @return JsonResponse|Response|null
      */
     public function register(Request $request,ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder,
             AppAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler) {

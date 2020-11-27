@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\UserVocabulary;
 use App\Entity\Word;
 use App\Repository\WordRepository;
 use App\Service\UserVocabularyService;
@@ -172,7 +171,7 @@ class WordController extends ApiController
 
         $audioConfig = (new AudioConfig())
                 ->setAudioEncoding(AudioEncoding::MP3)
-                ->setEffectsProfileId(array($effectsProfileId));
+                ->setEffectsProfileId([$effectsProfileId]);
 
         $response = $client->synthesizeSpeech($synthesisInputText, $voice, $audioConfig);
         $audioContent = $response->getAudioContent();

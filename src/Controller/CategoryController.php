@@ -33,6 +33,10 @@ class CategoryController extends ApiController
 
     /**
      * CategoryController constructor.
+     *
+     * @param LessonService $lessonService
+     * @param EntityManagerInterface $em
+     * @param SerializerInterface $serializer
      */
     public function __construct(LessonService $lessonService, EntityManagerInterface $em, SerializerInterface $serializer)
     {
@@ -68,6 +72,7 @@ class CategoryController extends ApiController
     /**
      * @Route("/", name="create_category", methods={"POST"})
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function create(Request $request)

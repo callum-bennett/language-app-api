@@ -85,6 +85,5 @@
                 "php-cs-fixer fix  --config .php_cs"
             ]
         }
-    },
-
+    }
 }

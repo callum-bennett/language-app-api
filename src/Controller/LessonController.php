@@ -35,6 +35,10 @@ class LessonController extends ApiController
 
     /**
      * LessonController constructor.
+     *
+     * @param LessonService $service
+     * @param EntityManagerInterface $em
+     * @param SerializerInterface $serializer
      */
     public function __construct(LessonService $service, EntityManagerInterface $em, SerializerInterface $serializer)
     {

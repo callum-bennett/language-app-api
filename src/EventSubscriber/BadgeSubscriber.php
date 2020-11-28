@@ -65,18 +65,21 @@ class BadgeSubscriber implements EventSubscriberInterface
         $componentInstance = $event->getLessonComponentInstance();
         $lessonProgress = $event->getLessonProgress();
 
-        if ($badge = $this->em->getRepository(Badge::class)->getUnobtainedBadgeForUser($user, "no_mistakes")) {
-            $key = $componentInstance->getLessonComponent()->getShortname();
+        if (!$badge = $this->em->getRepository(Badge::class)->getUnobtainedBadgeForUser($user, "no_mistakes")) {
+            return;
+        }
 
-            if ($key !== "slides") {
-                $incorrectAnswers = array_filter($lessonProgress->getResponses()[$key], function ($item) {
-                    return !$item;
-                });
+        if (!$componentInstance->getLessonComponent()->getRequiresInput()) {
+            return;
+        }
 
-                if (empty($incorrectAnswers)) {
-                    $this->badgeService->awardBadge($user, $badge);
-                }
-            }
+        $key = $componentInstance->getLessonComponent()->getShortname();
+        $incorrectAnswers = array_filter($lessonProgress->getResponses()[$key], function ($item) {
+            return !$item;
+        });
+
+        if (empty($incorrectAnswers)) {
+            $this->badgeService->awardBadge($user, $badge);
         }
     }
 }

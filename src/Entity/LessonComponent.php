@@ -34,6 +34,16 @@ class LessonComponent
      */
     private $shortname;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $requiresInput = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $hintsAvailable = false;
+
     public function __construct()
     {
         $this->lessonComponentInstances = new ArrayCollection();
@@ -95,6 +105,30 @@ class LessonComponent
     public function setShortname(string $shortname): self
     {
         $this->shortname = $shortname;
+
+        return $this;
+    }
+
+    public function getRequiresInput(): ?bool
+    {
+        return $this->requiresInput;
+    }
+
+    public function setRequiresInput(bool $requiresInput): self
+    {
+        $this->requiresInput = $requiresInput;
+
+        return $this;
+    }
+
+    public function getHintsAvailable(): ?bool
+    {
+        return $this->hintsAvailable;
+    }
+
+    public function setHintsAvailable(bool $hintsAvailable): self
+    {
+        $this->hintsAvailable = $hintsAvailable;
 
         return $this;
     }

@@ -38,10 +38,10 @@ class LessonComponentFixtures extends Fixture implements FixtureGroupInterface
     private function getLessonComponents(): array
     {
         return [
-            // $component = [$name, $shortname, $ref];
-            ["Slides", 'slides',  self::COMPONENT_REF_SLIDES],
-            ["Multiple Choice", 'multiplechoice', self::COMPONENT_REF_MULTIPLE_CHOICE],
-            ["Crossword", 'crossword', self::COMPONENT_REF_CROSSWORD],
+            // $component = [$name, $shortname, $requiresInput, $hintsAvailable, $ref];
+            ["Slides", 'slides', false, false, self::COMPONENT_REF_SLIDES],
+            ["Multiple Choice", 'multiplechoice', true, true, self::COMPONENT_REF_MULTIPLE_CHOICE],
+            ["Crossword", 'crossword', true, true, self::COMPONENT_REF_CROSSWORD],
         ];
     }
 

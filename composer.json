@@ -6,7 +6,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "brainmaestro/composer-git-hooks": "^2.8",
         "doctrine/annotations": "^1.10",
         "doctrine/doctrine-bundle": "^2.1",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
@@ -29,6 +28,7 @@
         "symfony/yaml": "5.1.*"
     },
     "require-dev": {
+        "brainmaestro/composer-git-hooks": "^2.8",
         "friendsofphp/php-cs-fixer": "^2.16",
         "symfony/maker-bundle": "^1.21",
         "symfony/stopwatch": "^5.1",

@@ -78,14 +78,27 @@ class LessonController extends ApiController
      */
     public function start($id)
     {
+        $objectToId = function ($o) {
+            return $o ? $o->getId() : null;
+        };
+
         try {
             $user = $this->getUser();
             $lesson = $this->repository->find($id);
-            $this->service->startLesson($user, $lesson);
+            $lessonProgress = $this->service->startLesson($user, $lesson);
 
-            return $this->success(true);
+            return $this->success($this->serializer->serialize($lessonProgress, 'json', [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['user'],
+                    AbstractNormalizer::CALLBACKS => [
+                            'lesson' => $objectToId,
+                        //@ todo move component data to front end
+                            'activeComponent' => function ($o) {
+                                return $o ? $o->getLessonComponent()->getId() : null;
+                            }
+                    ],
+            ]));
         } catch (\Exception $e) {
-            return $this->error(false, 500);
+            return $this->error($e->getMessage());
         }
     }
 

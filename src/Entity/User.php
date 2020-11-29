@@ -85,6 +85,11 @@ class User implements UserInterface
      */
     private $notifications = [];
 
+    /**
+     * @ORM\OneToOne(targetEntity=XP::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $XP;
+
     public function __construct()
     {
         $this->lessonProgress = new ArrayCollection();
@@ -325,6 +330,23 @@ class User implements UserInterface
     public function setNotifications(?array $notifications): self
     {
         $this->notifications = $notifications;
+
+        return $this;
+    }
+
+    public function getXP(): ?XP
+    {
+        return $this->XP;
+    }
+
+    public function setXP(XP $XP): self
+    {
+        $this->XP = $XP;
+
+        // set the owning side of the relation if necessary
+        if ($XP->getUser() !== $this) {
+            $XP->setUser($this);
+        }
 
         return $this;
     }

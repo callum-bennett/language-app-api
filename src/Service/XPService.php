@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\XP;
 use App\Repository\XPRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,8 @@ class XPService
     public const DAILY = "daily";
     public const WEEKLY = "weekly";
     public const MONTHLY = "monthly";
+
+    public const CORRECT_ANSWER_XP_POINTS = 1;
 
     /**
      * @var EntityManagerInterface
@@ -55,5 +58,30 @@ class XPService
         $table = XP::class;
         $query = $this->em->createQuery("update $table xp set xp.$type = 0");
         $query->execute();
+    }
+
+    /**
+     * @param User $user
+     * @param int $points
+     * @return XP
+     */
+    public function updateXP(User $user, int $points) {
+
+        if (!$xpRecord = $this->repository->findOneBy(["user" => $user])) {
+            $xpRecord = new XP();
+            $xpRecord->setUser($user);
+        }
+
+        $newDaily = $xpRecord->getDaily() + $points;
+        $newWeekly = $xpRecord->getWeekly() + $points;
+        $newMonthly = $xpRecord->getMonthly() + $points;
+
+        $xpRecord->setDaily($newDaily);
+        $xpRecord->setWeekly($newWeekly);
+        $xpRecord->setMonthly($newMonthly);
+        $this->em->persist($xpRecord);
+        $this->em->flush();
+
+        return $xpRecord;
     }
 }

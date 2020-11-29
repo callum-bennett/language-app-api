@@ -20,17 +20,17 @@ class XP
     /**
      * @ORM\Column(type="integer")
      */
-    private $daily;
+    private $daily = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $weekly;
+    private $weekly = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $monthly;
+    private $monthly = 0;
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="XP", cascade={"persist", "remove"})

@@ -55,5 +55,7 @@ class NotificationService
         $user->setNotifications($currentNotifications);
         $this->em->persist($user);
         $this->em->flush();
+
+        return true;
     }
 }

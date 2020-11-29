@@ -49,7 +49,6 @@ class XPSubscriber implements EventSubscriberInterface
         $allResponses = $event->getLessonProgress()->getResponses();
 
         if ($responses = $allResponses[$lessonComponent->getShortname()]) {
-
             $correctAnswers = array_filter($responses, function ($response) {
                 return $response;
             });

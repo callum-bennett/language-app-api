@@ -12,8 +12,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method XP[]    findAll()
  * @method XP[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class XPRepository extends ServiceEntityRepository {
-    public function __construct(ManagerRegistry $registry) {
+class XPRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, XP::class);
     }
 
@@ -45,5 +47,4 @@ class XPRepository extends ServiceEntityRepository {
         ;
     }
     */
-
 }

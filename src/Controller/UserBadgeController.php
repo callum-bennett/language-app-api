@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * Class BadgeController.
+ * Class UserBadgeController.
  *
  * @Route("/api/v1/user_badge", name="api_v1_user_badge_")
  */

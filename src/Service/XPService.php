@@ -26,7 +26,8 @@ class XPService
      */
     private $repository;
 
-    private function getAvailableTypes() {
+    private function getAvailableTypes()
+    {
         return [
                 self::DAILY,
                 self::WEEKLY,
@@ -49,8 +50,8 @@ class XPService
      * @param string $type
      * @throws Exception
      */
-    public function clearXP(string $type) {
-
+    public function clearXP(string $type)
+    {
         if (!in_array($type, $this->getAvailableTypes())) {
             throw new Exception("Invalid XP frequency");
         }
@@ -65,8 +66,8 @@ class XPService
      * @param int $points
      * @return XP
      */
-    public function updateXP(User $user, int $points) {
-
+    public function updateXP(User $user, int $points)
+    {
         if (!$xpRecord = $this->repository->findOneBy(["user" => $user])) {
             $xpRecord = new XP();
             $xpRecord->setUser($user);

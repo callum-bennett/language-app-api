@@ -47,4 +47,20 @@ class XPRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param $type
+     * @param int $limit
+     * @return int|mixed|string
+     */
+    public function getTopXUsersByType($type, $limit = 10) {
+
+        return $this->createQueryBuilder('xp')
+                ->select("xp.$type as score, u.username")
+                ->join("xp.user", "u")
+                ->setMaxResults($limit)
+                ->orderBy("xp.$type", "DESC")
+                ->getQuery()
+                ->getResult();
+    }
 }

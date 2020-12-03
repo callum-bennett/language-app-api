@@ -85,4 +85,12 @@ class XPService
 
         return $xpRecord;
     }
+
+    /**
+     * @param $type
+     * @return mixed
+     */
+    public function getLeaderboard($type) {
+        return $this->em->getRepository(XP::class)->getTopXUsersByType($type);
+    }
 }

@@ -29,9 +29,9 @@ class LessonComponentFixtures extends Fixture implements FixtureGroupInterface
             $lessonComponent->setShortname($shortname);
             $lessonComponent->setRequiresInput($requiresInput);
             $lessonComponent->setHintsAvailable($hintsAvailable);
-            $this->addReference($ref, $lessonComponent);
 
             $objectManager->persist($lessonComponent);
+            $this->addReference($ref, $lessonComponent);
         }
 
         $objectManager->flush();

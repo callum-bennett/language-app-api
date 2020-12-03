@@ -44,7 +44,7 @@ class ApiController extends AbstractController
     protected function error($message = self::STANDARD_ERROR, $errorCode = 500)
     {
         if ($this->getParameter("app.env") === "prod") {
-            $message = self::STANDARD_ERROR;
+            //$message = self::STANDARD_ERROR;
         }
 
         return new JsonResponse($message, $errorCode);

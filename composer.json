@@ -26,7 +26,8 @@
         "symfony/serializer-pack": "^1.0",
         "symfony/twig-bundle": "^5.1",
         "symfony/validator": "5.1.*",
-        "symfony/yaml": "5.1.*"
+        "symfony/yaml": "5.1.*",
+      "ext-redis": "*"
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.8",

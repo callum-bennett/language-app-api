@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Entity\XP;
 use App\Repository\XPRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Redis;
+use Predis\Client;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class XPService
@@ -48,7 +48,7 @@ class XPService
      * @param Redis $redisClient
      * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManagerInterface $em, Redis $redisClient, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $em, Client $redisClient, SerializerInterface $serializer)
     {
         $this->em = $em;
         $this->repository = $this->em->getRepository(XP::class);

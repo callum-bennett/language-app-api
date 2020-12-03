@@ -33,4 +33,4 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Redis: '@snc_redis.default'
+    Predis\Client: '@snc_redis.default'

@@ -1,6 +1,6 @@
 snc_redis:
   clients:
     default:
-      type: phpredis
+      type: predis
       alias: default
       dsn: '%env(resolve:REDIS_DSN)%'

@@ -14,7 +14,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class XPController extends ApiController
 {
-
     private $serializer;
 
     /**
@@ -39,7 +38,7 @@ class XPController extends ApiController
             $data = $XPService->getLeaderboard($type);
             return $this->success($this->serializer->serialize($data, "json"));
         } catch (\Exception $e) {
-            return $this->error($e->getMessage());
+            return $this->success(false);
         }
     }
 }

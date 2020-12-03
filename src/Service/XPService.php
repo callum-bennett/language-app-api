@@ -6,7 +6,8 @@ use App\Entity\User;
 use App\Entity\XP;
 use App\Repository\XPRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Redis;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class XPService
 {
@@ -26,6 +27,11 @@ class XPService
      */
     private $repository;
 
+    private $redisClient;
+
+    private $serializer;
+
+
     private function getAvailableTypes()
     {
         return [
@@ -39,11 +45,15 @@ class XPService
      * XPService constructor.
      *
      * @param EntityManagerInterface $em
+     * @param Redis $redisClient
+     * @param SerializerInterface $serializer
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, Redis $redisClient, SerializerInterface $serializer)
     {
         $this->em = $em;
         $this->repository = $this->em->getRepository(XP::class);
+        $this->redisClient = $redisClient;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -87,10 +97,28 @@ class XPService
     }
 
     /**
+     * @return bool
+     */
+    public function updateLeaderboard() {
+
+        $toRedis = [];
+
+        foreach ($this->getAvailableTypes() as $type) {
+            $toRedis[$type] = $this->em->getRepository(XP::class)->getTopXUsersByType($type);
+        }
+
+        foreach ($toRedis as $key => $value) {
+            $this->redisClient->set($key, json_encode($value));
+        }
+
+        return true;
+    }
+
+    /**
      * @param $type
      * @return mixed
      */
     public function getLeaderboard($type) {
-        return $this->em->getRepository(XP::class)->getTopXUsersByType($type);
+        return json_decode($this->redisClient->get($type));
     }
 }

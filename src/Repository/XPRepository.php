@@ -53,8 +53,8 @@ class XPRepository extends ServiceEntityRepository
      * @param int $limit
      * @return int|mixed|string
      */
-    public function getTopXUsersByType($type, $limit = 10) {
-
+    public function getTopXUsersByType($type, $limit = 10)
+    {
         return $this->createQueryBuilder('xp')
                 ->select("xp.$type as score, u.username")
                 ->join("xp.user", "u")

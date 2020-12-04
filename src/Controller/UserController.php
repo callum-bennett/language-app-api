@@ -12,7 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/api/v1/user", name="api_v1_user_")
  */
-class UserController extends ApiController {
+class UserController extends ApiController
+{
     private $em;
 
     private $notificationService;
@@ -22,7 +23,8 @@ class UserController extends ApiController {
      *
      * @param NotificationService $notificationService
      */
-    public function __construct(NotificationService $notificationService) {
+    public function __construct(NotificationService $notificationService)
+    {
         $this->notificationService = $notificationService;
     }
 
@@ -30,13 +32,12 @@ class UserController extends ApiController {
      * @Route("/clear_notifications", name="clear_notifications", methods={"POST"})
      * @param Request $request
      */
-    public function clear_notifications(Request $request) {
-
+    public function clear_notifications(Request $request)
+    {
         $user = $this->getUser();
         try {
             $data = json_decode($request->getContent());
             return $this->success($this->notificationService->clearNotificationsOfType($user, $data->type));
-
         } catch (Exception $e) {
             return $this->error($e->getMessage());
         }

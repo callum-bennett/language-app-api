@@ -15,7 +15,8 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
     private $wordService;
     private $params;
 
-    public function __construct (WordService $wordService, ParameterBagInterface $params) {
+    public function __construct(WordService $wordService, ParameterBagInterface $params)
+    {
         $this->wordService = $wordService;
         $this->params = $params;
     }

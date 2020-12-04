@@ -32,8 +32,8 @@ class XPController extends ApiController
      * @return JsonResponse
      * @Route("/leaderboard/{type}", name="get_leaderboard", methods={"GET"})
      */
-    public function leaderboard($type, XPService $XPService) {
-
+    public function leaderboard($type, XPService $XPService)
+    {
         try {
             $data = $XPService->getLeaderboard($type);
             return $this->success($this->serializer->serialize($data, "json"));

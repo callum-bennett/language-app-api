@@ -29,8 +29,8 @@ class WordService
      * @param $text
      * @throws ApiException
      */
-    public function textToSpeech($text) {
-
+    public function textToSpeech($text)
+    {
         putenv('GOOGLE_APPLICATION_CREDENTIALS=/home/callum/uni/Project/assets/Languagelearningapp-c0fe9177a8be.json');
 
         $client = new TextToSpeechClient();
@@ -48,4 +48,3 @@ class WordService
         return $client->synthesizeSpeech($synthesisInputText, $voice, $audioConfig)->getAudioContent();
     }
 }
-

@@ -99,8 +99,8 @@ class XPService
     /**
      * @return bool
      */
-    public function updateLeaderboard() {
-
+    public function updateLeaderboard()
+    {
         $toRedis = [];
 
         foreach ($this->getAvailableTypes() as $type) {
@@ -118,7 +118,8 @@ class XPService
      * @param $type
      * @return mixed
      */
-    public function getLeaderboard($type) {
+    public function getLeaderboard($type)
+    {
         return json_decode($this->redisClient->get($type));
     }
 }

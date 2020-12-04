@@ -3,13 +3,23 @@
 namespace App\DataFixtures;
 
 use App\Entity\Word;
+use App\Service\WordService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class WordFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
+    private $wordService;
+    private $params;
+
+    public function __construct (WordService $wordService, ParameterBagInterface $params) {
+        $this->wordService = $wordService;
+        $this->params = $params;
+    }
+
     public function getDependencies()
     {
         return [
@@ -25,6 +35,23 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
             $word->setName($name);
             $word->setTranslation($translation);
             $word->setImageUrl($imageUrl);
+            $word->setIsValid(true);
+
+            try {
+                $sound = $this->wordService->textToSpeech($name);
+
+                $publicDir = $this->params->get("publicSoundDir");
+                $sanitizedName = preg_replace("/[^a-zA-ZÁÉÍÑÓÚÜáéíñóúü]/", "", $name);
+                $fileName = $sanitizedName . "-". time() . ".mp3";
+                $filePath = "/words/" . $fileName;
+
+                file_put_contents($publicDir . $filePath, $sound);
+                $word->setSoundUri($filePath);
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+                $word->setIsValid(false);
+            }
+
             foreach ($categoryRefs as $ref) {
                 $category = $this->getReference($ref);
                 $word->addCategory($category);

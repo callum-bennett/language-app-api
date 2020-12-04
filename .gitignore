@@ -17,4 +17,5 @@
 
 ###> Custom ###
 /src/Controller/TestController.php
+google-credentials.json
 ###< Custom ###

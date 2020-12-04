@@ -49,6 +49,16 @@ class Word
      */
     private $imageUrl;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $soundUri;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isValid;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
@@ -141,6 +151,30 @@ class Word
     public function setImageUrl(?string $imageUrl): self
     {
         $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getSoundUri(): ?string
+    {
+        return $this->soundUri;
+    }
+
+    public function setSoundUri(?string $soundUri): self
+    {
+        $this->soundUri = $soundUri;
+
+        return $this;
+    }
+
+    public function getIsValid(): ?bool
+    {
+        return $this->isValid;
+    }
+
+    public function setIsValid(bool $isValid): self
+    {
+        $this->isValid = $isValid;
 
         return $this;
     }

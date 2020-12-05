@@ -31,76 +31,56 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
     public function load(ObjectManager $objectManager): void
     {
         $i = 0;
-        foreach ($this->getWords() as [$name, $categoryRefs, $translation, $imageUrl]) {
-            $word = new Word();
-            $word->setName($name);
-            $word->setTranslation($translation);
-            $word->setImageUrl($imageUrl);
-            $word->setIsValid(true);
+        foreach ($this->getWords() as [$name, $categoryRefs, $translation]) {
 
-            try {
-                $sound = $this->wordService->textToSpeech($name);
+            $categories = array_map(function($ref) {
+                return $this->getReference($ref);
+            }, $categoryRefs);
 
-                $publicDir = $this->params->get("publicSoundDir");
-                $sanitizedName = preg_replace("/[^a-zA-ZÁÉÍÑÓÚÜáéíñóúü]/", "", $name);
-                $fileName = $sanitizedName . "-". time() . ".mp3";
-                $filePath = "/words/" . $fileName;
+            $word = $this->wordService->createWord($name, $categories, $translation);
 
-                file_put_contents($publicDir . $filePath, $sound);
-                $word->setSoundUri($filePath);
-            } catch (\Exception $e) {
-                echo $e->getMessage();
-                $word->setIsValid(false);
-            }
-
-            foreach ($categoryRefs as $ref) {
-                $category = $this->getReference($ref);
-                $word->addCategory($category);
-            }
-
-            $objectManager->persist($word);
             $this->addReference("word_$i", $word);
             ++$i;
         }
 
-        $objectManager->flush();
+
     }
 
     private function getWords(): array
     {
         return [
-            // $word = [$name, $categoryRefs, $translation, $imageUrl];
+            // $word = [$name, $categoryRefs, $translation];
 
             // Family
-            ['yo', [CategoryFixtures::CAT_REF_FAMILY], 'Me', 'https://i.ibb.co/ScYTFSW/yo.jpg'],
-            ['madre', [CategoryFixtures::CAT_REF_FAMILY], 'Mother', 'https://i.ibb.co/PckrX5R/madre.jpg'],
-            ['padre', [CategoryFixtures::CAT_REF_FAMILY], 'Father', 'https://i.ibb.co/18mkc6x/padre.jpg'],
-            ['niño', [CategoryFixtures::CAT_REF_FAMILY], 'Boy', 'https://i.ibb.co/XZm363B/nino.jpg'],
-            ['niña', [CategoryFixtures::CAT_REF_FAMILY], 'Girl', 'https://i.ibb.co/7vGGWg9/nina.jpg'],
-            ['hijo', [CategoryFixtures::CAT_REF_FAMILY], 'Son', 'https://i.ibb.co/QpkvX4s/hijo.jpg'],
-            ['hija', [CategoryFixtures::CAT_REF_FAMILY], 'Daughter', 'https://i.ibb.co/K79GKQ2/hija.jpg'],
-            ['bebe', [CategoryFixtures::CAT_REF_FAMILY], 'Baby', 'https://i.ibb.co/F0Fw8zy/bebe.jpg'],
-            ['hermana', [CategoryFixtures::CAT_REF_FAMILY], 'Sister', 'https://i.ibb.co/9N1yph5/sister.jpg'],
-            ['hermano', [CategoryFixtures::CAT_REF_FAMILY], 'Brother', 'https://i.ibb.co/YXWzqjS/hermano.jpg'],
-            ['abuelo', [CategoryFixtures::CAT_REF_FAMILY], 'Grandfather', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['abuela', [CategoryFixtures::CAT_REF_FAMILY], 'Grandmother', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['primo', [CategoryFixtures::CAT_REF_FAMILY], 'Cousin (female]', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['prima', [CategoryFixtures::CAT_REF_FAMILY], 'Cousin (male]', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['sobrino', [CategoryFixtures::CAT_REF_FAMILY], 'Nephew', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['sobrina', [CategoryFixtures::CAT_REF_FAMILY], 'Niece', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['nieto', [CategoryFixtures::CAT_REF_FAMILY], 'Grandson', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['nieta', [CategoryFixtures::CAT_REF_FAMILY], 'Granddaughter', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['cuñado', [CategoryFixtures::CAT_REF_FAMILY], 'Brother in law', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['cuñada', [CategoryFixtures::CAT_REF_FAMILY], 'Sister in law', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['suegro', [CategoryFixtures::CAT_REF_FAMILY], 'Father in law', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['suegra', [CategoryFixtures::CAT_REF_FAMILY], 'Mother in law', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['esposo', [CategoryFixtures::CAT_REF_FAMILY], 'Husband', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['esposa', [CategoryFixtures::CAT_REF_FAMILY], 'Wife', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['gemelo', [CategoryFixtures::CAT_REF_FAMILY], 'Twin', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['madrina', [CategoryFixtures::CAT_REF_FAMILY], 'Godmother', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['padrino', [CategoryFixtures::CAT_REF_FAMILY], 'Godfather', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['mama', [CategoryFixtures::CAT_REF_FAMILY], 'Mum', 'https://i.ibb.co/x35kDv2/blank.jpg'],
-            ['papa', [CategoryFixtures::CAT_REF_FAMILY], 'Dad', 'https://i.ibb.co/x35kDv2/blank.jpg'],
+            ['yo', [CategoryFixtures::CAT_REF_FAMILY], 'Me'],
+            ['madre', [CategoryFixtures::CAT_REF_FAMILY], 'Mother'],
+            ['padre', [CategoryFixtures::CAT_REF_FAMILY], 'Father'],
+            ['niño', [CategoryFixtures::CAT_REF_FAMILY], 'Boy'],
+            ['niña', [CategoryFixtures::CAT_REF_FAMILY], 'Girl'],
+            ['hijo', [CategoryFixtures::CAT_REF_FAMILY], 'Son'],
+            ['hija', [CategoryFixtures::CAT_REF_FAMILY], 'Daughter'],
+            ['bebe', [CategoryFixtures::CAT_REF_FAMILY], 'Baby'],
+            ['hermana', [CategoryFixtures::CAT_REF_FAMILY], 'Sister'],
+            ['hermano', [CategoryFixtures::CAT_REF_FAMILY], 'Brother'],
+            ['abuelo', [CategoryFixtures::CAT_REF_FAMILY], 'Grandfather'],
+            ['abuela', [CategoryFixtures::CAT_REF_FAMILY], 'Grandmother'],
+            ['primo', [CategoryFixtures::CAT_REF_FAMILY], 'Cousin (male)'],
+            ['prima', [CategoryFixtures::CAT_REF_FAMILY], 'Cousin (female)'],
+            ['sobrino', [CategoryFixtures::CAT_REF_FAMILY], 'Nephew'],
+            ['sobrina', [CategoryFixtures::CAT_REF_FAMILY], 'Niece'],
+            ['nieto', [CategoryFixtures::CAT_REF_FAMILY], 'Grandson'],
+            ['nieta', [CategoryFixtures::CAT_REF_FAMILY], 'Granddaughter'],
+            ['cuñado', [CategoryFixtures::CAT_REF_FAMILY], 'Brother in law'],
+            ['cuñada', [CategoryFixtures::CAT_REF_FAMILY], 'Sister in law'],
+            ['suegro', [CategoryFixtures::CAT_REF_FAMILY], 'Father in law'],
+            ['suegra', [CategoryFixtures::CAT_REF_FAMILY], 'Mother in law'],
+            ['esposo', [CategoryFixtures::CAT_REF_FAMILY], 'Husband'],
+            ['esposa', [CategoryFixtures::CAT_REF_FAMILY], 'Wife'],
+            ['gemelo', [CategoryFixtures::CAT_REF_FAMILY], 'Twin'],
+            ['madrina', [CategoryFixtures::CAT_REF_FAMILY], 'Godmother'],
+            ['padrino', [CategoryFixtures::CAT_REF_FAMILY], 'Godfather'],
+            ['mama', [CategoryFixtures::CAT_REF_FAMILY], 'Mum'],
+            ['papa', [CategoryFixtures::CAT_REF_FAMILY], 'Dad'],
 
             // Top 100 words
             //['que', [CategoryFixtures::CAT_REF_TOP_100_WORDS], 'That/Than'],

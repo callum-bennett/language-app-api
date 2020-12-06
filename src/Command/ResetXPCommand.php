@@ -58,7 +58,6 @@ class ResetXPCommand extends Command
                 $this->xpService->clearXP(XPService::MONTHLY);
                 $output->writeln(sprintf("%s XP cleared successfully!", ucfirst(XPService::MONTHLY)));
             }
-
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return Command::FAILURE;

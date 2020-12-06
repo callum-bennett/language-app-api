@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Word;
 use App\Service\WordService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
@@ -32,8 +31,7 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
     {
         $i = 0;
         foreach ($this->getWords() as [$name, $categoryRefs, $translation]) {
-
-            $categories = array_map(function($ref) {
+            $categories = array_map(function ($ref) {
                 return $this->getReference($ref);
             }, $categoryRefs);
 
@@ -42,8 +40,6 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
             $this->addReference("word_$i", $word);
             ++$i;
         }
-
-
     }
 
     private function getWords(): array

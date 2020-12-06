@@ -3,69 +3,49 @@
 namespace App\Service;
 
 use App\Entity\Word;
+use App\Service\Cloud\GCSUploader;
+use App\Service\Cloud\TextToSpeech;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\ApiCore\ApiException;
-use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\TextToSpeech\V1\AudioConfig;
-use Google\Cloud\TextToSpeech\V1\AudioEncoding;
-use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
-use Google\Cloud\TextToSpeech\V1\SynthesisInput;
-use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
-use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class WordService
 {
     private $em;
     private $params;
+    private $gcsUploader;
+    private $textToSpeech;
 
     /**
      * WordService constructor.
      *
      * @param ParameterBagInterface $params
      * @param EntityManagerInterface $em
+     * @param GCSUploader $gcsUploader
+     * @param TextToSpeech $textToSpeech
      */
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em)
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, GCSUploader $gcsUploader, TextToSpeech $textToSpeech)
     {
-        putenv('GOOGLE_APPLICATION_CREDENTIALS=google-credentials.json');
-
         $this->em = $em;
         $this->params = $params;
+        $this->gcsUploader = $gcsUploader;
+        $this->textToSpeech = $textToSpeech;
     }
 
     /**
-     * @param $text
-     * @return string
-     * @throws ApiException
-     */
-    private function textToSpeech(string $text): string {
-
-        $client = new TextToSpeechClient();
-        $synthesisInputText = (new SynthesisInput())
-                ->setText($text);
-
-        $voice = (new VoiceSelectionParams())
-                ->setLanguageCode('es-ES')
-                ->setSsmlGender(SsmlVoiceGender::FEMALE);
-
-        $audioConfig = (new AudioConfig())
-                ->setAudioEncoding(AudioEncoding::MP3)
-                ->setEffectsProfileId(["telephony-class-application"]);
-
-        return $client->synthesizeSpeech($synthesisInputText, $voice, $audioConfig)->getAudioContent();
-    }
-
-    /**
-     * @param $sound
+     * @param $soundFile
      * @param $name
+     * @return false
      */
-    private function uploadSound($sound, $name) {
+    private function uploadSoundFile($soundFile, $name)
+    {
+        $soundDir = $this->params->get("googleCloudSoundDir");
+        $sanitizedName = preg_replace("/[^a-zA-ZÁÉÍÑÓÚÜáéíñóúü]/", "", $name);
+        $fileName = $sanitizedName . "-". time() . ".mp3";
+        $filePath = $soundDir . $fileName;
 
-        $storage = new StorageClient();
-        $bucket = $storage->bucket("cb591");
-        $bucket->upload($sound, [
-                'name' => ltrim($name, "/")
-        ]);
+        return $this->gcsUploader->upload($soundFile, $filePath);
+        ;
     }
 
     /**
@@ -74,8 +54,8 @@ class WordService
      * @param $translation
      * @return Word
      */
-    public function createWord($name, $categories, $translation): Word {
-
+    public function createWord($name, $categories, $translation): Word
+    {
         $word = new Word();
         $word->setName($name);
         $word->setTranslation($translation);
@@ -86,16 +66,16 @@ class WordService
         }
 
         try {
-            $sound = $this->textToSpeech($name);
+            $soundFile = $this->textToSpeech->execute($name);
+            $soundUrl = $this->uploadSoundFile($soundFile, $name);
 
-            $sanitizedName = preg_replace("/[^a-zA-ZÁÉÍÑÓÚÜáéíñóúü]/", "", $name);
-            $fileName = $sanitizedName . "-". time() . ".mp3";
-            $filePath = "/sounds/" . $fileName;
+            $bucketName = $this->params->get("googleCloudBucket");
+            $imageDir = $this->params->get("googleCloudImageDir");
+            $imagePath = "{$imageDir}words/{$name}.jpg";
+            $imageUrl = GCSUploader::$gcsBasePath . $bucketName . "/" . $imagePath;
 
-            $this->uploadSound($sound, $filePath);
-
-            $word->setImageUrl("/images/${name}.jpeg");
-            $word->setSoundUri($filePath);
+            $word->setImageUrl($imageUrl);
+            $word->setsoundUrl($soundUrl);
         } catch (\Exception $e) {
             echo $e->getMessage();
             $word->setIsValid(false);

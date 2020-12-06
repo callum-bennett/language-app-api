@@ -52,7 +52,7 @@ class Word
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $soundUri;
+    private $soundUrl;
 
     /**
      * @ORM\Column(type="boolean")
@@ -155,14 +155,14 @@ class Word
         return $this;
     }
 
-    public function getSoundUri(): ?string
+    public function getsoundUrl(): ?string
     {
-        return $this->soundUri;
+        return $this->soundUrl;
     }
 
-    public function setSoundUri(?string $soundUri): self
+    public function setsoundUrl(?string $soundUrl): self
     {
-        $this->soundUri = $soundUri;
+        $this->soundUrl = $soundUrl;
 
         return $this;
     }

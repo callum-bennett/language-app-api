@@ -7,6 +7,10 @@ parameters:
   publicImageDir: "%kernel.project_dir%/public/images"
   publicSoundDir: "%kernel.project_dir%/public/sounds"
   app.env: "%env(APP_ENV)%"
+  googleCloudCredentials: "%env(GOOGLE_APPLICATION_CREDENTIALS)%"
+  googleCloudBucket: "cb591"
+  googleCloudSoundDir: "sounds/"
+  googleCloudImageDir: "images/"
 
 services:
     # default configuration for services in *this* file

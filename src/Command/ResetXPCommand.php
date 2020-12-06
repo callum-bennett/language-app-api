@@ -3,6 +3,8 @@
 namespace App\Command;
 
 use App\Service\XPService;
+use Carbon\Carbon;
+use Carbon\Exceptions\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +30,6 @@ class ResetXPCommand extends Command
     protected function configure()
     {
         $this
-                ->addArgument("type", InputArgument::REQUIRED, "The XP type you wish to clear")
                 ->setName("Reset XP points command.")
                 ->setDescription("Reset XP points for all users.");
     }
@@ -40,10 +41,24 @@ class ResetXPCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $today = (Carbon::now())->format("d-m-y");
+        $startOfWeek = (Carbon::now())->startOfWeek()->format("d-m-y");
+        $startOfMonth = (Carbon::now())->startOfMonth()->format("d-m-y");
+
         try {
-            $type = $input->getArgument("type");
-            $this->xpService->clearXP($type);
-            $output->writeln(sprintf("%s XP cleared successfully!", ucfirst($type)));
+            $this->xpService->clearXP(XPService::DAILY);
+            $output->writeln(sprintf("%s XP cleared successfully!", ucfirst(XPService::DAILY)));
+
+            if ($today === $startOfWeek) {
+                $this->xpService->clearXP(XPService::WEEKLY);
+                $output->writeln(sprintf("%s XP cleared successfully!", ucfirst(XPService::WEEKLY)));
+            }
+
+            if ($today === $startOfMonth) {
+                $this->xpService->clearXP(XPService::MONTHLY);
+                $output->writeln(sprintf("%s XP cleared successfully!", ucfirst(XPService::MONTHLY)));
+            }
+
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return Command::FAILURE;

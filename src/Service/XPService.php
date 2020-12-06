@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\XP;
 use App\Repository\XPRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Predis\Client;
 use Symfony\Component\Serializer\SerializerInterface;
 

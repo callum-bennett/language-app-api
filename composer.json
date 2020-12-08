@@ -34,6 +34,7 @@
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.8",
+        "phpmd/phpmd" : "@stable",
         "friendsofphp/php-cs-fixer": "^2.16",
         "symfony/maker-bundle": "^1.21",
         "symfony/stopwatch": "^5.1",

@@ -8,9 +8,16 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInterface
+class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInterface, ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
     public function load(ObjectManager $objectManager): void
     {
         foreach ($this->getBadges() as [$name, $description, $shortname, $icon, $iconHidden, $notifier]) {
@@ -28,24 +35,33 @@ class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInt
         $objectManager->flush();
     }
 
+    public function setContainer(ContainerInterface $container = null) {
+        $this->container = $container;
+    }
+
     private function getBadges(): array
     {
+        $gcsRoot = "https://storage.googleapis.com";
+        $bucket = $this->container->getParameter("googleCloudBucket");
+        $imageDir = $this->container->getParameter("googleCloudImageDir");
+        $basePath = "$gcsRoot/$bucket/$imageDir";
+
         return [
             // $badge = [$name, $description, $shortname, $icon, $iconHidden, $notifier];
             [
                     '10 words',
                     'Learn 10 words',
                     '10_words',
-                    'https://i.ibb.co/9nPXt3X/10-words.png',
-                    'https://i.ibb.co/3mYYMLc/10-words-hidden.png',
+                    "{$basePath}badges/10-words.png",
+                    "{$basePath}badges/10-words-hidden.png",
                     BadgeRepository::WORD
             ],
             [
                     '100 words',
                     'Learn 100 words',
                     '100_words',
-                    'https://i.ibb.co/1X79Wdr/100-words.png',
-                    'https://i.ibb.co/0Kyr6bj/100-words-hidden.png',
+                    "{$basePath}badges/100-words.png",
+                    "{$basePath}badges/100-words-hidden.png",
                     'word',
                     BadgeRepository::WORD
             ],
@@ -53,8 +69,8 @@ class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInt
                     '1000 words',
                     'Learn 1000 words',
                     '1000_words',
-                    'https://i.ibb.co/DrLTybp/1000-words.png',
-                    'https://i.ibb.co/FXWqMdW/1000-words-hidden.png',
+                    "{$basePath}badges/1000-words.png",
+                    "{$basePath}badges/1000-words-hidden.png",
                     'word',
                     BadgeRepository::WORD
             ],
@@ -62,8 +78,8 @@ class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInt
                     'Cadet',
                     'Complete a single lesson',
                     'cadet',
-                    'https://i.ibb.co/GJchVGF/cadet.png',
-                    'https://i.ibb.co/J3Nj542/cadet-hidden.png',
+                    "{$basePath}badges/cadet.png",
+                    "{$basePath}badges/cadet-hidden.png",
                     'lesson',
                     BadgeRepository::LESSON
             ],
@@ -71,8 +87,8 @@ class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInt
                     'No mistakes!',
                     'Complete a lesson component without making any mistakes',
                     'no_mistakes',
-                    'https://i.ibb.co/J2VMNzt/no-mistakes.png',
-                    'https://i.ibb.co/jHRnb29/no-mistakes-hidden.png',
+                    "{$basePath}badges/no-mistakes.png",
+                    "{$basePath}badges/no-mistakes-hidden.png",
                     'lesson',
                     BadgeRepository::LESSON
             ],

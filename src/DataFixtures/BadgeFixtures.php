@@ -35,7 +35,8 @@ class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInt
         $objectManager->flush();
     }
 
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
         $this->container = $container;
     }
 

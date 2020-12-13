@@ -36,7 +36,8 @@ class CategoryFixtures extends Fixture implements FixtureInterface, FixtureGroup
         $objectManager->flush();
     }
 
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
         $this->container = $container;
     }
 

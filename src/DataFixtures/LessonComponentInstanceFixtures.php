@@ -44,11 +44,20 @@ class LessonComponentInstanceFixtures extends Fixture implements DependentFixtur
             [LessonComponentFixtures::COMPONENT_REF_CROSSWORD, LessonFixtures::LESSON_REF_FAMILY_1, 2],
             [LessonComponentFixtures::COMPONENT_REF_SLIDES, LessonFixtures::LESSON_REF_FAMILY_2, 0],
             [LessonComponentFixtures::COMPONENT_REF_MULTIPLE_CHOICE, LessonFixtures::LESSON_REF_FAMILY_2, 1],
+            [LessonComponentFixtures::COMPONENT_REF_CROSSWORD, LessonFixtures::LESSON_REF_FAMILY_2, 2],
             [LessonComponentFixtures::COMPONENT_REF_SLIDES, LessonFixtures::LESSON_REF_FAMILY_3, 0],
             [LessonComponentFixtures::COMPONENT_REF_MULTIPLE_CHOICE, LessonFixtures::LESSON_REF_FAMILY_3, 1],
+
+            [LessonComponentFixtures::COMPONENT_REF_SLIDES, LessonFixtures::LESSON_REF_NUMBERS_1, 0],
+            [LessonComponentFixtures::COMPONENT_REF_MULTIPLE_CHOICE, LessonFixtures::LESSON_REF_NUMBERS_1, 1],
+            [LessonComponentFixtures::COMPONENT_REF_SLIDES, LessonFixtures::LESSON_REF_NUMBERS_2, 0],
+            [LessonComponentFixtures::COMPONENT_REF_MULTIPLE_CHOICE, LessonFixtures::LESSON_REF_NUMBERS_2, 1],
+
+            [LessonComponentFixtures::COMPONENT_REF_SLIDES, LessonFixtures::LESSON_REF_TRAVEL_1, 0],
+            [LessonComponentFixtures::COMPONENT_REF_MULTIPLE_CHOICE, LessonFixtures::LESSON_REF_TRAVEL_1, 1],
+            [LessonComponentFixtures::COMPONENT_REF_CROSSWORD, LessonFixtures::LESSON_REF_TRAVEL_1, 2],
         ];
     }
-
 
     public static function getGroups(): array
     {

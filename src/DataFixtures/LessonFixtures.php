@@ -13,6 +13,9 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
     public const LESSON_REF_FAMILY_1 = "family_1";
     public const LESSON_REF_FAMILY_2 = "family_2";
     public const LESSON_REF_FAMILY_3 = "family_3";
+    public const LESSON_REF_NUMBERS_1 = "numbers_1";
+    public const LESSON_REF_NUMBERS_2 = "numbers_2";
+    public const LESSON_REF_TRAVEL_1 = "travel_1";
 
     public function getDependencies()
     {
@@ -32,7 +35,7 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
             $lesson->setSequence($sequence);
 
             for ($i = $wordStart; $i < $wordEnd; ++$i) {
-                $word = $this->getReference("word_$i");
+                $word = $this->getReference("{$categoryRef}_word_{$i}");
                 $lesson->addWord($word);
             }
 
@@ -50,6 +53,11 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
             [CategoryFixtures::CAT_REF_FAMILY, 0, 0, 10, self::LESSON_REF_FAMILY_1],
             [CategoryFixtures::CAT_REF_FAMILY, 1, 10, 20, self::LESSON_REF_FAMILY_2],
             [CategoryFixtures::CAT_REF_FAMILY, 2, 20, 29, self::LESSON_REF_FAMILY_3],
+
+            [CategoryFixtures::CAT_REF_NUMBERS, 0, 0, 10, self::LESSON_REF_NUMBERS_1],
+            [CategoryFixtures::CAT_REF_NUMBERS, 1, 10, 20, self::LESSON_REF_NUMBERS_2],
+
+            [CategoryFixtures::CAT_REF_TRAVEL, 0, 0, 10, self::LESSON_REF_TRAVEL_1],
         ];
     }
 

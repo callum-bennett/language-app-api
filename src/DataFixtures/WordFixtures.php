@@ -31,14 +31,22 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
     {
         $i = 0;
         foreach ($this->getWords() as [$name, $categoryRefs, $translation]) {
+            $category = $categoryRefs[0];
+
+            if (!empty($lastCategory) && $category !== $lastCategory) {
+                $i = 0;
+            }
+
             $categories = array_map(function ($ref) {
                 return $this->getReference($ref);
             }, $categoryRefs);
 
             $word = $this->wordService->createWord($name, $categories, $translation);
 
-            $this->addReference("word_$i", $word);
+            $category = $categoryRefs[0];
+            $this->addReference("{$category}_word_{$i}", $word);
             ++$i;
+            $lastCategory = $category;
         }
     }
 
@@ -58,6 +66,7 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
             ['bebe', [CategoryFixtures::CAT_REF_FAMILY], 'Baby'],
             ['hermana', [CategoryFixtures::CAT_REF_FAMILY], 'Sister'],
             ['hermano', [CategoryFixtures::CAT_REF_FAMILY], 'Brother'],
+
             ['abuelo', [CategoryFixtures::CAT_REF_FAMILY], 'Grandfather'],
             ['abuela', [CategoryFixtures::CAT_REF_FAMILY], 'Grandmother'],
             ['primo', [CategoryFixtures::CAT_REF_FAMILY], 'Cousin (male)'],
@@ -68,6 +77,7 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
             ['nieta', [CategoryFixtures::CAT_REF_FAMILY], 'Granddaughter'],
             ['cuñado', [CategoryFixtures::CAT_REF_FAMILY], 'Brother in law'],
             ['cuñada', [CategoryFixtures::CAT_REF_FAMILY], 'Sister in law'],
+
             ['suegro', [CategoryFixtures::CAT_REF_FAMILY], 'Father in law'],
             ['suegra', [CategoryFixtures::CAT_REF_FAMILY], 'Mother in law'],
             ['esposo', [CategoryFixtures::CAT_REF_FAMILY], 'Husband'],
@@ -77,6 +87,44 @@ class WordFixtures extends Fixture implements DependentFixtureInterface, Fixture
             ['padrino', [CategoryFixtures::CAT_REF_FAMILY], 'Godfather'],
             ['mama', [CategoryFixtures::CAT_REF_FAMILY], 'Mum'],
             ['papa', [CategoryFixtures::CAT_REF_FAMILY], 'Dad'],
+
+            // travel
+            ['autobús', [CategoryFixtures::CAT_REF_TRAVEL], 'Bus'],
+            ['carro', [CategoryFixtures::CAT_REF_TRAVEL], 'Car'],
+            ['tren', [CategoryFixtures::CAT_REF_TRAVEL], 'Train'],
+            ['aeropuerto', [CategoryFixtures::CAT_REF_TRAVEL], 'Airport'],
+            ['viajar', [CategoryFixtures::CAT_REF_TRAVEL], 'To travel'],
+            ['playa', [CategoryFixtures::CAT_REF_TRAVEL], 'Beach'],
+            ['hotel', [CategoryFixtures::CAT_REF_TRAVEL], 'Hotel'],
+            ['vacación', [CategoryFixtures::CAT_REF_TRAVEL], 'Holiday'],
+            ['subte', [CategoryFixtures::CAT_REF_TRAVEL], 'Subway'],
+            ['taxi', [CategoryFixtures::CAT_REF_TRAVEL], 'Taxi'],
+
+
+            //['pasaporte', [CategoryFixtures::CAT_REF_TRAVEL], 'Passport'],
+
+
+            // numbers
+            ['uno', [CategoryFixtures::CAT_REF_NUMBERS], 'One'],
+            ['dos', [CategoryFixtures::CAT_REF_NUMBERS], 'Two'],
+            ['tres', [CategoryFixtures::CAT_REF_NUMBERS], 'Three'],
+            ['cuatro', [CategoryFixtures::CAT_REF_NUMBERS], 'Four'],
+            ['cinco', [CategoryFixtures::CAT_REF_NUMBERS], 'Five'],
+            ['seis', [CategoryFixtures::CAT_REF_NUMBERS], 'Six'],
+            ['siete', [CategoryFixtures::CAT_REF_NUMBERS], 'Seven'],
+            ['ocho', [CategoryFixtures::CAT_REF_NUMBERS], 'Eight'],
+            ['nueve', [CategoryFixtures::CAT_REF_NUMBERS], 'Nine'],
+            ['diez', [CategoryFixtures::CAT_REF_NUMBERS], 'Ten'],
+            ['once', [CategoryFixtures::CAT_REF_NUMBERS], 'Eleven'],
+            ['doce', [CategoryFixtures::CAT_REF_NUMBERS], 'Twelve'],
+            ['trece', [CategoryFixtures::CAT_REF_NUMBERS], 'Thirteen'],
+            ['catorce', [CategoryFixtures::CAT_REF_NUMBERS], 'Fourteen'],
+            ['quince', [CategoryFixtures::CAT_REF_NUMBERS], 'Fifteen'],
+            ['dieciseis', [CategoryFixtures::CAT_REF_NUMBERS], 'Sixteen'],
+            ['diecisiete', [CategoryFixtures::CAT_REF_NUMBERS], 'Seventeen'],
+            ['dieciocho', [CategoryFixtures::CAT_REF_NUMBERS], 'Eighteen'],
+            ['diecinueve', [CategoryFixtures::CAT_REF_NUMBERS], 'Nineteen'],
+            ['veinte', [CategoryFixtures::CAT_REF_NUMBERS], 'Twenty'],
 
             // Top 100 words
             //['que', [CategoryFixtures::CAT_REF_TOP_100_WORDS], 'That/Than'],

@@ -34,7 +34,7 @@ class BadgeSubscriber implements EventSubscriberInterface
     {
         return [
                 LessonCompletedEvent::NAME => [
-                        ['checkCadetBadge', 0],
+                        ['checkRookieBadge', 0],
                 ],
                 LessonComponentCompletedEvent::NAME => [
                         ['checkNoMistakesBadge', 0]
@@ -46,11 +46,11 @@ class BadgeSubscriber implements EventSubscriberInterface
      * @param LessonCompletedEvent $event
      * @throws \Exception
      */
-    public function checkCadetBadge(LessonCompletedEvent $event)
+    public function checkRookieBadge(LessonCompletedEvent $event)
     {
         $user = $event->getUser();
 
-        if ($badge = $this->em->getRepository(Badge::class)->getUnobtainedBadgeForUser($user, "cadet")) {
+        if ($badge = $this->em->getRepository(Badge::class)->getUnobtainedBadgeForUser($user, "rookie")) {
             $this->badgeService->awardBadge($user, $badge);
         }
     }

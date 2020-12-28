@@ -76,11 +76,11 @@ class BadgeFixtures extends Fixture implements FixtureInterface, FixtureGroupInt
                     BadgeRepository::WORD
             ],
             [
-                    'Cadet',
+                    'Rookie',
                     'Complete a single lesson',
-                    'cadet',
-                    "{$basePath}badges/cadet.png",
-                    "{$basePath}badges/cadet-hidden.png",
+                    'rookie',
+                    "{$basePath}badges/rookie.png",
+                    "{$basePath}badges/rookie-hidden.png",
                     'lesson',
                     BadgeRepository::LESSON
             ],

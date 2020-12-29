@@ -119,8 +119,12 @@ class XPService
      * @param $type
      * @return mixed
      */
-    public function getLeaderboard($type)
-    {
-        return json_decode($this->redisClient->get($type));
+    public function getLeaderboard($type) {
+
+        if ($redisData = $this->redisClient->get($type)) {
+            return json_decode($redisData);
+        }
+
+        return $this->em->getRepository(XP::class)->getTopXUsersByType($type);
     }
 }

@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Service\LessonService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -138,12 +139,17 @@ class CategoryController extends ApiController
             };
 
             $data = $this->serializer->serialize($progress, 'json', [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'user', 'lessonComponentInstances'],
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'user'],
                     AbstractNormalizer::CALLBACKS => [
                             'category' => $objectToId,
                             'lesson' => $objectToId,
                             'activeComponent' => function ($o) {
                                 return $o ? $o->getLessonComponent()->getId() : null;
+                            },
+                            'lessonComponentInstances' => function (PersistentCollection $collection) {
+                                return array_map(function($object) {
+                                    return $object->getLessonComponent()->getId();
+                                }, $collection->getValues());
                             }
                     ],
             ]);

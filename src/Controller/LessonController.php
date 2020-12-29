@@ -8,6 +8,7 @@ use App\Repository\LessonRepository;
 use App\Service\LessonService;
 use App\Service\UserVocabularyService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,11 +59,16 @@ class LessonController extends ApiController
 
             if ($lessons = $this->repository->findAll()) {
                 $data = $this->serializer->serialize($lessons, 'json', [
-                        AbstractNormalizer::IGNORED_ATTRIBUTES => ['words', 'lessonComponentInstances'],
+                        AbstractNormalizer::IGNORED_ATTRIBUTES => ['words'],
                         AbstractNormalizer::CALLBACKS => [
                                 'category' => function ($innerObject) {
                                     return $innerObject->getId();
                                 },
+                                'lessonComponentInstances' => function (PersistentCollection $collection) {
+                                    return array_map(function($object) {
+                                        return $object->getLessonComponent()->getId();
+                                    }, $collection->getValues());
+                                }
                         ],
                 ]);
             }

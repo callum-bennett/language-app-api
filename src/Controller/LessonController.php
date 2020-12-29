@@ -65,7 +65,7 @@ class LessonController extends ApiController
                                     return $innerObject->getId();
                                 },
                                 'lessonComponentInstances' => function (PersistentCollection $collection) {
-                                    return array_map(function($object) {
+                                    return array_map(function ($object) {
                                         return $object->getLessonComponent()->getId();
                                     }, $collection->getValues());
                                 }

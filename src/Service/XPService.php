@@ -119,8 +119,8 @@ class XPService
      * @param $type
      * @return mixed
      */
-    public function getLeaderboard($type) {
-
+    public function getLeaderboard($type)
+    {
         if ($redisData = $this->redisClient->get($type)) {
             return json_decode($redisData);
         }

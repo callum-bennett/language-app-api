@@ -147,7 +147,7 @@ class CategoryController extends ApiController
                                 return $o ? $o->getLessonComponent()->getId() : null;
                             },
                             'lessonComponentInstances' => function (PersistentCollection $collection) {
-                                return array_map(function($object) {
+                                return array_map(function ($object) {
                                     return $object->getLessonComponent()->getId();
                                 }, $collection->getValues());
                             }

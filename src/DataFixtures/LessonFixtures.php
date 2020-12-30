@@ -27,11 +27,12 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
 
     public function load(ObjectManager $objectManager): void
     {
-        foreach ($this->getLessons() as [$categoryRef, $sequence, $wordStart, $wordEnd, $ref]) {
+        foreach ($this->getLessons() as [$categoryRef, $sequence, $name, $wordStart, $wordEnd, $ref]) {
             $category = $this->getReference($categoryRef);
 
             $lesson = new Lesson();
             $lesson->setCategory($category);
+            $lesson->setName($name);
             $lesson->setSequence($sequence);
 
             for ($i = $wordStart; $i < $wordEnd; ++$i) {
@@ -49,15 +50,15 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
     private function getLessons(): array
     {
         return [
-            // $lesson = [$categoryRef, $sequence, $wordStart, $wordEnd, $ref];
-            [CategoryFixtures::CAT_REF_FAMILY, 0, 0, 10, self::LESSON_REF_FAMILY_1],
-            [CategoryFixtures::CAT_REF_FAMILY, 1, 10, 20, self::LESSON_REF_FAMILY_2],
-            [CategoryFixtures::CAT_REF_FAMILY, 2, 20, 29, self::LESSON_REF_FAMILY_3],
+            // $lesson = [$categoryRef, $sequence, $name, $wordStart, $wordEnd, $ref];
+            [CategoryFixtures::CAT_REF_FAMILY, 0, "Immediate Family", 0, 10, self::LESSON_REF_FAMILY_1],
+            [CategoryFixtures::CAT_REF_FAMILY, 1, "Relatives I", 10, 20, self::LESSON_REF_FAMILY_2],
+            [CategoryFixtures::CAT_REF_FAMILY, 2, "Relatives II", 20, 29, self::LESSON_REF_FAMILY_3],
 
-            [CategoryFixtures::CAT_REF_NUMBERS, 0, 0, 10, self::LESSON_REF_NUMBERS_1],
-            [CategoryFixtures::CAT_REF_NUMBERS, 1, 10, 20, self::LESSON_REF_NUMBERS_2],
+            [CategoryFixtures::CAT_REF_NUMBERS, 0, "1-10", 0, 10, self::LESSON_REF_NUMBERS_1],
+            [CategoryFixtures::CAT_REF_NUMBERS, 1, "2-20", 10, 20, self::LESSON_REF_NUMBERS_2],
 
-            [CategoryFixtures::CAT_REF_TRAVEL, 0, 0, 10, self::LESSON_REF_TRAVEL_1],
+            [CategoryFixtures::CAT_REF_TRAVEL, 0, "Travel I", 0, 10, self::LESSON_REF_TRAVEL_1],
         ];
     }
 

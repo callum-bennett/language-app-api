@@ -121,10 +121,12 @@ class XPService
      */
     public function getLeaderboard($type)
     {
-        if ($redisData = $this->redisClient->get($type)) {
-            return json_decode($redisData);
+        try {
+            if ($redisData = $this->redisClient->get($type)) {
+                return json_decode($redisData);
+            }
+        } catch (Exception $e) {
+            return $this->em->getRepository(XP::class)->getTopXUsersByType($type);
         }
-
-        return $this->em->getRepository(XP::class)->getTopXUsersByType($type);
     }
 }

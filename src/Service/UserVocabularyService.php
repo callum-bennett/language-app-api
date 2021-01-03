@@ -32,7 +32,7 @@ class UserVocabularyService
      */
     public function addWord(User $user, Word $word)
     {
-        if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['word' => $word])) {
+        if (!$vocabEntry = $this->em->getRepository(UserVocabulary::class)->findOneBy(['user' => $user, 'word' => $word])) {
             $vocabEntry = new UserVocabulary();
             $vocabEntry->setUser($user);
             $vocabEntry->setWord($word);

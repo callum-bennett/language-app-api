@@ -18,7 +18,7 @@ class UserVocabulary
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Word::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Word::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $word;

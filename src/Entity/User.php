@@ -31,6 +31,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="Username is required")
+     * @Assert\Length(
+     *     min=3,
+     *     minMessage = "Username must be at least 3 characters",
+     *     max=25,
+     *     maxMessage = "Username cannot be more than 25 characters"
+     * )
      */
     private $username;
 
@@ -62,6 +68,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=191, nullable=true)
      * @Assert\NotBlank(message="Password is required")
+     * @Assert\Length(
+     *     min=8,
+     *     minMessage = "Password must be at least 8 characters",
+     *     max=30,
+     *     maxMessage = "Password cannot be more than 30 characters"
+     * )
      */
     private $plainPassword;
 

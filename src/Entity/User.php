@@ -102,6 +102,11 @@ class User implements UserInterface
      */
     private $XP;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $onboarded = false;
+
     public function __construct()
     {
         $this->lessonProgress = new ArrayCollection();
@@ -359,6 +364,18 @@ class User implements UserInterface
         if ($XP->getUser() !== $this) {
             $XP->setUser($this);
         }
+
+        return $this;
+    }
+
+    public function getOnboarded(): ?bool
+    {
+        return $this->onboarded;
+    }
+
+    public function setOnboarded(bool $onboarded): self
+    {
+        $this->onboarded = $onboarded;
 
         return $this;
     }

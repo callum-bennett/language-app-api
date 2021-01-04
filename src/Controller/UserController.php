@@ -83,7 +83,8 @@ class UserController extends ApiController
      * @param Request $request
      * @return JsonResponse
      */
-    public function clear_notifications(Request $request): JsonResponse {
+    public function clear_notifications(Request $request): JsonResponse
+    {
         $user = $this->getUser();
         try {
             $data = json_decode($request->getContent());

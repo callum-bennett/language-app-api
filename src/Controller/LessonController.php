@@ -179,22 +179,4 @@ class LessonController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{id}/progress", name="get_lesson_progress", methods={"GET"})
-     *
-     * @param $id
-     *
-     * @return JsonResponse
-     */
-    public function get_progress($id)
-    {
-        try {
-            $lesson = $this->repository->findBy($id);
-            $data = $this->serializer->serialize($lesson->getProgress(), 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['lesson']]);
-
-            return $this->success($data);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage());
-        }
-    }
 }

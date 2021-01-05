@@ -12,7 +12,7 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
 {
     public const LESSON_REF_FAMILY_1 = "family_1";
     public const LESSON_REF_FAMILY_2 = "family_2";
-    public const LESSON_REF_FAMILY_3 = "family_3";
+    //public const LESSON_REF_FAMILY_3 = "family_3";
     public const LESSON_REF_NUMBERS_1 = "numbers_1";
     public const LESSON_REF_NUMBERS_2 = "numbers_2";
     public const LESSON_REF_TRAVEL_1 = "travel_1";
@@ -52,8 +52,8 @@ class LessonFixtures extends Fixture implements DependentFixtureInterface, Fixtu
         return [
             // $lesson = [$categoryRef, $sequence, $name, $wordStart, $wordEnd, $ref];
             [CategoryFixtures::CAT_REF_FAMILY, 0, "Immediate Family", 0, 10, self::LESSON_REF_FAMILY_1],
-            [CategoryFixtures::CAT_REF_FAMILY, 1, "Relatives I", 10, 20, self::LESSON_REF_FAMILY_2],
-            [CategoryFixtures::CAT_REF_FAMILY, 2, "Relatives II", 20, 29, self::LESSON_REF_FAMILY_3],
+            [CategoryFixtures::CAT_REF_FAMILY, 1, "Relatives", 10, 20, self::LESSON_REF_FAMILY_2],
+            //[CategoryFixtures::CAT_REF_FAMILY, 2, "Relatives II", 20, 29, self::LESSON_REF_FAMILY_3],
 
             [CategoryFixtures::CAT_REF_NUMBERS, 0, "1-10", 0, 10, self::LESSON_REF_NUMBERS_1],
             [CategoryFixtures::CAT_REF_NUMBERS, 1, "2-20", 10, 20, self::LESSON_REF_NUMBERS_2],

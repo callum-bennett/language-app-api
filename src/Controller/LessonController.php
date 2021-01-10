@@ -178,5 +178,4 @@ class LessonController extends ApiController
             return $this->error($e->getMessage());
         }
     }
-
 }

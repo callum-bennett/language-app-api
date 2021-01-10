@@ -105,7 +105,7 @@ class XPService
         $toRedis = [];
 
         foreach ($this->getAvailableTypes() as $type) {
-            $toRedis[$type] = $this->em->getRepository(XP::class)->getTopXUsersByType($type);
+            $toRedis[$type] = $this->repository->getTopXUsersByType($type);
         }
 
         foreach ($toRedis as $key => $value) {
@@ -119,14 +119,37 @@ class XPService
      * @param $type
      * @return mixed
      */
-    public function getLeaderboard($type)
+    public function getLeaderboard($type, User $user)
     {
+        $scores = [];
         try {
             if ($redisData = $this->redisClient->get($type)) {
-                return json_decode($redisData);
+                $scores = json_decode($redisData);
             }
         } catch (Exception $e) {
-            return $this->em->getRepository(XP::class)->getTopXUsersByType($type);
+            $scores = $this->repository->getTopXUsersByType($type);
         }
+        $scores = $this->checkUserScore($scores, $user, $type);
+
+
+        return $scores;
+    }
+
+
+    private function checkUserScore($scores, $user, $type)
+    {
+        foreach ($scores as $score) {
+            if ($score->username === $user->getUserName()) {
+                return $scores;
+            }
+        }
+
+        if ($userScore = $this->repository->getUserScoreByType($user, $type)) {
+            if ($userScore['score']) {
+                array_push($scores, (object) $userScore);
+            }
+        }
+
+        return $scores;
     }
 }

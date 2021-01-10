@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\XP;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -62,5 +64,22 @@ class XPRepository extends ServiceEntityRepository
                 ->orderBy("xp.$type", "DESC")
                 ->getQuery()
                 ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param $type
+     * @return int|mixed|string
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getUserScoreByType(User $user, $type)
+    {
+        return $this->createQueryBuilder('xp')
+                ->select("xp.$type as score, u.username")
+                ->join("xp.user", "u")
+                ->andWhere('xp.user = :user')
+                ->setParameter('user', $user)
+                ->getQuery()
+                ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
     }
 }

@@ -35,7 +35,8 @@ class XPController extends ApiController
     public function leaderboard($type, XPService $XPService)
     {
         try {
-            $data = $XPService->getLeaderboard($type);
+            $user = $this->getUser();
+            $data = $XPService->getLeaderboard($type, $user);
             return $this->success($this->serializer->serialize($data, "json"));
         } catch (\Exception $e) {
             return $this->success(false);

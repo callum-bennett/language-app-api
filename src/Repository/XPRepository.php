@@ -61,6 +61,7 @@ class XPRepository extends ServiceEntityRepository
                 ->select("xp.$type as score, u.username")
                 ->join("xp.user", "u")
                 ->setMaxResults($limit)
+                ->andWhere("xp.$type > 0")
                 ->orderBy("xp.$type", "DESC")
                 ->getQuery()
                 ->getResult();

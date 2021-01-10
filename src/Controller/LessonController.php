@@ -127,20 +127,20 @@ class LessonController extends ApiController
             $data = json_decode($request->getContent());
             $wordId = $data->wordId;
             $correct = $data->correct;
+            $userAnswer = $data->userAnswer;
 
             $user = $this->getUser();
             $lesson = $this->repository->find($id);
 
             if (!$lessonProgress = $this->service->getUserLessonInstance($user, $lesson)) {
-                // @todo exception
                 return false;
             }
             $word = $this->em->getRepository(Word::class)->find($wordId);
-            $result = $this->service->submitAnswer($lessonProgress, $word, $correct, $vocabularyService);
+            $result = $this->service->submitAnswer($lessonProgress, $word, $userAnswer, $correct, $vocabularyService);
 
             return $this->success($result);
         } catch (\Exception $e) {
-            return $this->error($e->getMessage(), 500);
+            return $this->error($e->getMessage());
         }
     }
 

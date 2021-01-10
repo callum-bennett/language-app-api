@@ -96,11 +96,12 @@ class LessonService
     /**
      * @param LessonProgress $lessonProgress
      * @param Word $word
+     * @param $userAnswer
      * @param $correct
      * @param UserVocabularyService $vocabularyService
      * @return bool
      */
-    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $correct, UserVocabularyService $vocabularyService)
+    public function submitAnswer(LessonProgress $lessonProgress, Word $word, $userAnswer, $correct, UserVocabularyService $vocabularyService): bool
     {
         $updateVocabulary = true;
 
@@ -112,7 +113,10 @@ class LessonService
         } elseif (array_key_exists($word->getId(), $currentResponses[$key])) {
             $updateVocabulary = false;
         }
-        $currentResponses[$key][$word->getId()] = $correct;
+        $currentResponses[$key][$word->getId()] = [
+                "correct" => $correct,
+                "userAnswer" => $userAnswer
+        ];
         $lessonProgress->setResponses($currentResponses);
         $this->em->persist($lessonProgress);
         $this->em->flush();

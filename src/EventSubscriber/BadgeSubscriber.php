@@ -75,7 +75,7 @@ class BadgeSubscriber implements EventSubscriberInterface
 
         $key = $componentInstance->getLessonComponent()->getShortname();
         $incorrectAnswers = array_filter($lessonProgress->getResponses()[$key], function ($item) {
-            return !$item;
+            return !$item['correct'];
         });
 
         if (empty($incorrectAnswers)) {

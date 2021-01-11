@@ -50,7 +50,7 @@ class XPSubscriber implements EventSubscriberInterface
 
         if ($responses = $allResponses[$lessonComponent->getShortname()]) {
             $correctAnswers = array_filter($responses, function ($response) {
-                return $response;
+                return $response['correct'];
             });
 
             $points = sizeof($correctAnswers) * XPService::CORRECT_ANSWER_XP_POINTS;

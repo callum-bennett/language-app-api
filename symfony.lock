@@ -35,6 +35,9 @@
     "doctrine/dbal": {
         "version": "2.10.2"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
@@ -153,6 +156,9 @@
     "guzzlehttp/psr7": {
         "version": "1.7.0"
     },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.2.0"
+    },
     "monolog/monolog": {
         "version": "2.1.1"
     },
@@ -181,7 +187,7 @@
         "version": "2.8.0"
     },
     "php": {
-        "version": "7.2"
+        "version": "7.3"
     },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
